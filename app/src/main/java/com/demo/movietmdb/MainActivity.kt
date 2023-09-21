@@ -10,12 +10,20 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.demo.movietmdb.data.api.TMDBService
 import com.demo.movietmdb.ui.theme.MovieTMDBTheme
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+    @Inject
+    lateinit var tmdbService: TMDBService
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContent {
+
             MovieTMDBTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(
