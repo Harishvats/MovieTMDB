@@ -1,4 +1,4 @@
-package com.demo.movietmdb.ui.theme
+package com.demo.movietmdb.presentation.theme
 
 import androidx.compose.ui.graphics.Color
 

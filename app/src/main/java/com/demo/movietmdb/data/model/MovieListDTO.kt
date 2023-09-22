@@ -4,7 +4,13 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Movie(
+data class MovieListDTO(
+    @SerialName("results")
+    val movieDTO: List<MovieDTO>,
+)
+
+@Serializable
+data class MovieDTO(
     @SerialName("adult")
     val adult: Boolean,
     @SerialName("backdrop_path")

@@ -1,6 +1,7 @@
-package com.demo.movietmdb
+package com.demo.movietmdb.presentation
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,18 +11,31 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.demo.movietmdb.data.api.TMDBService
-import com.demo.movietmdb.ui.theme.MovieTMDBTheme
+import com.demo.movietmdb.common.ApiResponse
+import com.demo.movietmdb.domain.usecase.GetMoviesUseCase
+import com.demo.movietmdb.presentation.theme.MovieTMDBTheme
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     @Inject
-    lateinit var tmdbService: TMDBService
+    lateinit var getMoviesUseCase: GetMoviesUseCase
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        CoroutineScope(Dispatchers.IO).launch {
+            getMoviesUseCase.execute().collect() {
+                when (it) {
+                    is ApiResponse.Error -> Log.d("Harish", it.toString())
+                    ApiResponse.Loading -> Log.d("Harish", "Loading")
+                    is ApiResponse.Success -> Log.d("Harish", it.data.toString())
+                }
+            }
+        }
         setContent {
 
             MovieTMDBTheme {
