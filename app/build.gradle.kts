@@ -84,6 +84,9 @@ dependencies {
 //  serialisation
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1")
 
+//    image compose
+    implementation ("io.coil-kt:coil-compose:2.4.0")
+
 
 
     testImplementation("junit:junit:4.13.2")
