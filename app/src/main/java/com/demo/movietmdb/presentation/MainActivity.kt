@@ -4,65 +4,47 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import com.demo.movietmdb.common.ApiResponse
+import com.demo.movietmdb.domain.model.Movie
 import com.demo.movietmdb.domain.usecase.GetMoviesUseCase
+import com.demo.movietmdb.presentation.components.MoviesGrid
 import com.demo.movietmdb.presentation.theme.MovieTMDBTheme
+import com.demo.movietmdb.presentation.viewmodel.MovieListViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     @Inject
     lateinit var getMoviesUseCase: GetMoviesUseCase
+
+    private val movieListViewModel: MovieListViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        CoroutineScope(Dispatchers.IO).launch {
-            getMoviesUseCase.execute().collect() {
-                when (it) {
-                    is ApiResponse.Error -> Log.d("Harish", it.toString())
-                    ApiResponse.Loading -> Log.d("Harish", "Loading")
-                    is ApiResponse.Success -> Log.d("Harish", it.data.toString())
-                }
-            }
-        }
         setContent {
 
             MovieTMDBTheme {
-                // A surface container using the 'background' color from the theme
                 Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
+                    modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background
                 ) {
-                    Greeting("Android")
+                    val resultValue = movieListViewModel.movieListStateFlow.collectAsState()
+
+                    when (resultValue.value) {
+                        is ApiResponse.Error -> Log.d("Harish", resultValue.toString())
+                        ApiResponse.Loading -> Log.d("Harish", "Loading")
+                        is ApiResponse.Success -> MoviesGrid((resultValue.value as ApiResponse.Success<List<Movie>>).data)
+                    }
+
                 }
             }
         }
     }
 }
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    MovieTMDBTheme {
-        Greeting("Android")
-    }
-}
