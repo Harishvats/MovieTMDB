@@ -24,7 +24,7 @@ class MovieListViewModel @Inject constructor(private val getMoviesUseCase: GetMo
         getMovieList()
     }
 
-    private fun getMovieList() {
+    fun getMovieList() {
         viewModelScope.launch {
             getMoviesUseCase.execute().collect() {
                 when (it) {
