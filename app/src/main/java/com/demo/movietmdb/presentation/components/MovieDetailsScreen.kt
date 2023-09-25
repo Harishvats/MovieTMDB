@@ -34,7 +34,7 @@ import com.demo.movietmdb.presentation.viewmodel.MovieDetailsViewModel
 
 
 @Composable
-fun MovieDetailsScreen(movieDetailsViewModel: MovieDetailsViewModel, selectedMovie: Int) {
+fun MovieDetailsScreen(movieDetailsViewModel: MovieDetailsViewModel) {
 
     val result = movieDetailsViewModel.movieDetailsStateFlow.collectAsState()
 
@@ -51,7 +51,7 @@ fun MovieDetailsWithTopBar(movieDetails: MovieDetails) {
     Scaffold(topBar = {
         TopAppBar(
             title = {
-            Text(text = movieDetails.title)
+                Text(text = movieDetails.title, maxLines = 1)
             },
             navigationIcon = {
                 IconButton(onClick = {}) {
