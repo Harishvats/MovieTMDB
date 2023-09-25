@@ -1,4 +1,4 @@
-package com.demo.movietmdb.presentation.theme
+package com.demo.movietmdb.presentation.ui.theme
 
 import android.app.Activity
 import android.os.Build

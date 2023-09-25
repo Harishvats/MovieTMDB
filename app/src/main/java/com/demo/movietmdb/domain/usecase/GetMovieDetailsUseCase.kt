@@ -4,5 +4,5 @@ import com.demo.movietmdb.domain.repository.MovieRepository
 import javax.inject.Inject
 
 class GetMovieDetailsUseCase @Inject constructor(private val movieRepository: MovieRepository) {
-    suspend fun execute(movieId: String) = movieRepository.getMovieDetails(movieId)
+    suspend fun execute(movieId: Int) = movieRepository.getMovieDetails(movieId)
 }

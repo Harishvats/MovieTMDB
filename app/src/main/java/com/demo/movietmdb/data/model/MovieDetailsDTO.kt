@@ -10,8 +10,6 @@ data class MovieDetailsDTO(
     val adult: Boolean,
     @SerialName("backdrop_path")
     val backdropPath: String,
-    @SerialName("belongs_to_collection")
-    val belongsToCollection: BelongsToCollection,
     @SerialName("budget")
     val budget: Int,
     @SerialName("genres")
@@ -32,8 +30,6 @@ data class MovieDetailsDTO(
     val popularity: Double,
     @SerialName("poster_path")
     val posterPath: String,
-    @SerialName("production_companies")
-    val productionCompanies: List<ProductionCompany>,
     @SerialName("release_date")
     val releaseDate: String,
     @SerialName("revenue")

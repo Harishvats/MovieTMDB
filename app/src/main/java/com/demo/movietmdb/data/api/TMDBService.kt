@@ -13,6 +13,6 @@ interface TMDBService {
     suspend fun getMovies(@Query("api_key") apikey: String): Response<MovieListDTO>
 
     @GET("movie/{movie_id}")
-    suspend fun getMovieDetails(@Path("movie_id") movieID: String, @Query("api_key") apikey: String): Response<MovieDetailsDTO>
+    suspend fun getMovieDetails(@Path("movie_id") movieID: Int, @Query("api_key") apikey: String): Response<MovieDetailsDTO>
 
 }

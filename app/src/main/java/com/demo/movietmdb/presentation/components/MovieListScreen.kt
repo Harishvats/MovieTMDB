@@ -1,6 +1,8 @@
 package com.demo.movietmdb.presentation.components
 
+import android.util.Log
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -14,28 +16,58 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
+import com.demo.movietmdb.common.ApiResponse
 import com.demo.movietmdb.domain.model.Movie
+import com.demo.movietmdb.presentation.viewmodel.MovieListViewModel
 
 @Composable
-fun MovieGridItem(movie: Movie) {
+fun MovieListScreen(movieListViewModel: MovieListViewModel, selectedMovie: (Int) -> Unit) {
+    val resultValue = movieListViewModel.movieListStateFlow.collectAsState()
+
+    when (resultValue.value) {
+        is ApiResponse.Error -> Log.d("Harish", resultValue.toString())
+        ApiResponse.Loading -> Log.d("Harish", "Loading")
+        is ApiResponse.Success -> MoviesGrid(
+            (resultValue.value as ApiResponse.Success<List<Movie>>).data,
+            selectedMovie
+        )
+    }
+}
+
+@Composable
+fun MoviesGrid(movieList: List<Movie>, selectedMovie: (Int) -> Unit) {
+    LazyVerticalGrid(
+        columns = GridCells.Fixed(2),
+        contentPadding = PaddingValues(10.dp),
+        content = {
+            items(movieList.size) {
+                MovieGridItem(movie = movieList[it], selectedMovie)
+            }
+        })
+}
+
+@Composable
+fun MovieGridItem(movie: Movie, selectedMovie: (Int) -> Unit) {
 
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp),
         elevation = CardDefaults.cardElevation(
-            defaultElevation = 6.dp
+            defaultElevation = 6.dp,
         )
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(8.dp)
+                .clickable { selectedMovie(movie.id) }
         ) {
             Image(
                 painter = rememberAsyncImagePainter(movie.posterPath),
@@ -68,14 +100,4 @@ fun MovieGridItem(movie: Movie) {
     }
 }
 
-@Composable
-fun MoviesGrid(movieList: List<Movie>) {
-    LazyVerticalGrid(
-        columns = GridCells.Fixed(2),
-        contentPadding = PaddingValues(10.dp),
-        content = {
-            items(movieList.size) {
-                MovieGridItem(movie = movieList[it])
-            }
-        })
-}
+

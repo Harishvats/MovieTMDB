@@ -3,8 +3,9 @@ package com.demo.movietmdb.data.repository.datasource
 import com.demo.movietmdb.BuildConfig
 import com.demo.movietmdb.common.ApiResponse
 import com.demo.movietmdb.data.api.TMDBService
-import com.demo.movietmdb.data.model.MovieDetailsDTO
+import com.demo.movietmdb.domain.mapper.MovieDetailsDtoToModelMapper
 import com.demo.movietmdb.domain.mapper.MovieListDtoToModelMapper
+import com.demo.movietmdb.domain.model.MovieDetails
 import com.demo.movietmdb.domain.model.MovieList
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -14,7 +15,8 @@ import javax.inject.Inject
 
 class MovieRemoteDataSourceImpl @Inject constructor(
     private val tmdbService: TMDBService,
-    private val movieListDtoToModelMapper: MovieListDtoToModelMapper
+    private val movieListDtoToModelMapper: MovieListDtoToModelMapper,
+    private val movieDetailsDtoToModelMapper: MovieDetailsDtoToModelMapper
 ) : MovieRemoteDataSource {
 
     override suspend fun getMovies(): Flow<ApiResponse<MovieList>> {
@@ -48,7 +50,7 @@ class MovieRemoteDataSourceImpl @Inject constructor(
     }
 
 
-    override suspend fun getMovieDetails(movieId: String): Flow<ApiResponse<MovieDetailsDTO>> {
+    override suspend fun getMovieDetails(movieId: Int): Flow<ApiResponse<MovieDetails>> {
 
         return flow {
             emit(ApiResponse.Loading)
@@ -56,7 +58,9 @@ class MovieRemoteDataSourceImpl @Inject constructor(
 
                 val response = tmdbService.getMovieDetails(movieId, BuildConfig.API_KEY)
                 if (response.isSuccessful) {
-                    emit(ApiResponse.Success(response.body()!!))
+
+                    response.body()
+                        ?.let { emit(ApiResponse.Success(movieDetailsDtoToModelMapper.mapFrom(it))) }
                 } else {
                     emit(ApiResponse.Error(response.message()))
                 }
