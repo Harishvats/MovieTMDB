@@ -12,8 +12,6 @@ data class MovieDetailsDTO(
     val backdropPath: String,
     @SerialName("budget")
     val budget: Int,
-    @SerialName("genres")
-    val genres: List<Genre>,
     @SerialName("homepage")
     val homepage: String,
     @SerialName("id")

@@ -6,6 +6,7 @@ import com.demo.movietmdb.domain.model.MovieList
 import com.demo.movietmdb.domain.repository.MovieRepository
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.test.runTest
+import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
@@ -27,7 +28,7 @@ class GetMoviesUseCaseTest {
     }
 
     @Test
-    fun `test execute`() = runTest {
+    fun `test successful fetch of movie list`() = runTest {
         val movies = mutableListOf<Movie>()
         movies.add(Movie(1, "posterpath1", "2023-07-26", "Movie 1"))
         movies.add(
@@ -37,19 +38,31 @@ class GetMoviesUseCaseTest {
             Movie(3, "posterpath3", "2022-08-06", "Movie 3")
         )
 
-        // Arrange
         val expectedResponse = ApiResponse.Success(MovieList(movies))
         `when`(mockMovieRepository.getMovies()).thenReturn(flow { emit(expectedResponse) })
 
-        // Act
         val result = getMoviesUseCase.execute()
 
-        // Assert
         result.collect { response ->
             assert(response is ApiResponse.Success)
             val data = (response as ApiResponse.Success).data
             assert(data.movies.size == 3)
             assert(data.movies[0].title == "Movie 1")
+        }
+    }
+
+    @Test
+    fun `test error in fetch of movie list`() = runTest {
+        val errorString = "Internal Server Error"
+        val expectedResponse = ApiResponse.Error(errorString)
+        `when`(mockMovieRepository.getMovies()).thenReturn(flow { emit(expectedResponse) })
+
+        val result = getMoviesUseCase.execute()
+
+        result.collect { response ->
+            assert(response is ApiResponse.Error)
+            val errorMsg = (response as ApiResponse.Error).message
+            Assert.assertEquals(errorMsg, errorString)
         }
     }
 }
