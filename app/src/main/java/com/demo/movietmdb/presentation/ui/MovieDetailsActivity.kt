@@ -28,7 +28,7 @@ class MovieDetailsActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background
                 ) {
                     movieDetailsViewModel.getMovieDetails(selectedMovie)
-                    MovieDetailsScreen(movieDetailsViewModel, selectedMovie)
+                    MovieDetailsScreen(movieDetailsViewModel)
                 }
             }
         }

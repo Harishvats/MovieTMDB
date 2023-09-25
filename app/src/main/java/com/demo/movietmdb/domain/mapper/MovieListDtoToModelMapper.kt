@@ -24,7 +24,6 @@ class MovieDtoToModelMapper @Inject constructor() : Mapper<MovieDTO, Movie> {
             posterPath = AppConstants.IMG_URL_PREFIX + from.posterPath,
             releaseDate = from.releaseDate,
             title = from.title,
-            voteAverage = from.voteAverage
         )
     }
 }

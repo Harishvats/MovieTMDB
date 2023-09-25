@@ -9,9 +9,9 @@ import javax.inject.Inject
 class MovieDetailsDtoToModelMapper @Inject constructor() : Mapper<MovieDetailsDTO, MovieDetails> {
     override fun mapFrom(from: MovieDetailsDTO): MovieDetails {
         return MovieDetails(
+            id = from.id,
             overview = from.overview,
             releaseDate = from.releaseDate,
-            popularity = from.popularity,
             runtime = from.runtime,
             tagline = from.tagline,
             posterPath = AppConstants.IMG_URL_PREFIX + from.posterPath,
