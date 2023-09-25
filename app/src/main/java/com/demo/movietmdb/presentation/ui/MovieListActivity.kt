@@ -30,7 +30,7 @@ class MovieListActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background
                 ) {
                     MovieListScreen(movieListViewModel) {
-                        Log.d("Harish", "selected movie Id $it")
+                        Log.d("MovieListActivity", "selected movie Id $it")
                         startActivity(
                             Intent(this, MovieDetailsActivity::class.java).putExtra(
                                 AppConstants.SELECTED_MOVIE_ID,

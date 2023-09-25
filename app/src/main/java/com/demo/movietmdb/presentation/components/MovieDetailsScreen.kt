@@ -39,8 +39,8 @@ fun MovieDetailsScreen(movieDetailsViewModel: MovieDetailsViewModel) {
     val result = movieDetailsViewModel.movieDetailsStateFlow.collectAsState()
 
     when (result.value) {
-        is ApiResponse.Error -> Log.d("Harish", result.toString())
-        ApiResponse.Loading -> Log.d("Harish", "Loading...")
+        is ApiResponse.Error -> Log.d("MovieDetailsScreen", result.toString())
+        ApiResponse.Loading -> Log.d("MovieDetailsScreen", "Loading...")
         is ApiResponse.Success -> MovieDetailsWithTopBar((result.value as ApiResponse.Success<MovieDetails>).data)
     }
 }

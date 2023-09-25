@@ -37,8 +37,8 @@ fun MovieListScreen(movieListViewModel: MovieListViewModel, selectedMovie: (Int)
     val resultValue = movieListViewModel.movieListStateFlow.collectAsState()
 
     when (resultValue.value) {
-        is ApiResponse.Error -> Log.d("Harish", resultValue.toString())
-        ApiResponse.Loading -> Log.d("Harish", "Loading")
+        is ApiResponse.Error -> Log.d("MovieListScreen", resultValue.toString())
+        ApiResponse.Loading -> Log.d("MovieListScreen", "Loading")
         is ApiResponse.Success -> MoviesGrid(
             (resultValue.value as ApiResponse.Success<List<Movie>>).data,
             selectedMovie
