@@ -54,7 +54,7 @@ class MovieRepositoryImplTest {
                 "posterpath1",
                 "tagline",
                 "2023-07-26",
-                122,
+                "122",
                 "Movie 1",
                 ""
             )

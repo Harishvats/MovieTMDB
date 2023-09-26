@@ -6,7 +6,7 @@ data class MovieDetails(
     val posterPath: String,
     val tagline: String,
     val releaseDate: String,
-    val runtime: Int,
+    val runtime: String,
     val title: String,
     val backdropPath: String,
     )

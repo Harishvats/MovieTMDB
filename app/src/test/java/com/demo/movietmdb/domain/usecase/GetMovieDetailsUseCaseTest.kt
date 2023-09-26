@@ -32,7 +32,7 @@ class GetMovieDetailsUseCaseTest {
             title = "Movie 1",
             releaseDate = "2022-10-09",
             tagline = "Movie 1 Tag",
-            runtime = 120
+            runtime = "120"
         )
 
     }

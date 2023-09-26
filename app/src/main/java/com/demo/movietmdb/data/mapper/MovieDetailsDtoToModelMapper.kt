@@ -1,4 +1,4 @@
-package com.demo.movietmdb.domain.mapper
+package com.demo.movietmdb.data.mapper
 
 import com.demo.movietmdb.common.AppConstants
 import com.demo.movietmdb.common.Mapper
@@ -12,7 +12,7 @@ class MovieDetailsDtoToModelMapper @Inject constructor() : Mapper<MovieDetailsDT
             id = from.id,
             overview = from.overview,
             releaseDate = from.releaseDate,
-            runtime = from.runtime,
+            runtime = "${from.runtime} ${AppConstants.MINUTES}",
             tagline = from.tagline,
             posterPath = AppConstants.IMG_URL_PREFIX + from.posterPath,
             title = from.title,

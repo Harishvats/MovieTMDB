@@ -42,7 +42,7 @@ class MovieDetailsViewModelTest {
             title = "Movie 1",
             releaseDate = "2022-10-09",
             tagline = "Movie 1 Tag",
-            runtime = 120
+            runtime = "120"
         )
         val apiResponse = ApiResponse.Success(movieDetails)
         coEvery { mockGetMovieDetailsUseCase.execute(1) } returns flowOf(apiResponse)

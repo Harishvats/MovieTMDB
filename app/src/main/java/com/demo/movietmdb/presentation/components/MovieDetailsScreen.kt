@@ -1,6 +1,6 @@
 package com.demo.movietmdb.presentation.components
 
-import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -9,21 +9,15 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
@@ -34,51 +28,42 @@ import com.demo.movietmdb.presentation.viewmodel.MovieDetailsViewModel
 
 
 @Composable
-fun MovieDetailsScreen(movieDetailsViewModel: MovieDetailsViewModel) {
-
+fun MovieDetailsScreen(
+    movieDetailsViewModel: MovieDetailsViewModel,
+    selectedMovieId: Int,
+    modifier: Modifier
+) {
+    LaunchedEffect(key1 = true) {
+        movieDetailsViewModel.getMovieDetails(selectedMovieId)
+    }
+    val context = LocalContext.current
     val result = movieDetailsViewModel.movieDetailsStateFlow.collectAsState()
 
     when (result.value) {
-        is ApiResponse.Error -> Log.d("MovieDetailsScreen", result.toString())
-        ApiResponse.Loading -> Log.d("MovieDetailsScreen", "Loading...")
-        is ApiResponse.Success -> MovieDetailsWithTopBar((result.value as ApiResponse.Success<MovieDetails>).data)
+        is ApiResponse.Error -> Toast.makeText(
+            context,
+            (result.value as ApiResponse.Error).message,
+            Toast.LENGTH_SHORT
+        ).show()
+
+        ApiResponse.Loading -> Toast.makeText(
+            context,
+            stringResource(id = R.string.fetching_details),
+            Toast.LENGTH_SHORT
+        ).show()
+
+        is ApiResponse.Success -> MovieCard(
+            (result.value as ApiResponse.Success<MovieDetails>).data,
+            modifier
+        )
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MovieDetailsWithTopBar(movieDetails: MovieDetails) {
-    Scaffold(topBar = {
-        TopAppBar(
-            title = {
-                Text(text = movieDetails.title, maxLines = 1)
-            },
-            navigationIcon = {
-                IconButton(onClick = {}) {
-                    Icon(Icons.Filled.ArrowBack, stringResource(id = R.string.backicon))
-                }
-            },
-            colors = TopAppBarDefaults.smallTopAppBarColors(
-                containerColor = MaterialTheme.colorScheme.primary,
-                titleContentColor = Color.Transparent,
-            )
-        )
-    }, content = {
-        Column(
-            modifier = Modifier
-                .padding(it)
-        ) {
-            MovieCard(movieDetails = movieDetails)
-        }
-
-    })
-}
-
-@Composable
-fun MovieCard(movieDetails: MovieDetails) {
+fun MovieCard(movieDetails: MovieDetails, modifier: Modifier) {
 
     Column(
-        modifier = Modifier
+        modifier = modifier
             .padding(bottom = 10.dp)
             .verticalScroll(rememberScrollState())
     ) {
@@ -166,13 +151,12 @@ fun MovieCard(movieDetails: MovieDetails) {
         )
 
         Text(
-            movieDetails.runtime.toString(),
+            movieDetails.runtime,
             style = MaterialTheme.typography.bodyMedium,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 5.dp, start = 10.dp, end = 10.dp),
             color = Color.Black,
         )
-
     }
 }

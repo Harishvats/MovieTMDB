@@ -3,8 +3,8 @@ package com.demo.movietmdb.data.repository.datasource
 import com.demo.movietmdb.BuildConfig
 import com.demo.movietmdb.common.ApiResponse
 import com.demo.movietmdb.data.api.TMDBService
-import com.demo.movietmdb.domain.mapper.MovieDetailsDtoToModelMapper
-import com.demo.movietmdb.domain.mapper.MovieListDtoToModelMapper
+import com.demo.movietmdb.data.mapper.MovieDetailsDtoToModelMapper
+import com.demo.movietmdb.data.mapper.MovieListDtoToModelMapper
 import com.demo.movietmdb.domain.model.MovieDetails
 import com.demo.movietmdb.domain.model.MovieList
 import kotlinx.coroutines.flow.Flow

@@ -6,8 +6,8 @@ import com.demo.movietmdb.data.api.TMDBService
 import com.demo.movietmdb.data.model.MovieDTO
 import com.demo.movietmdb.data.model.MovieDetailsDTO
 import com.demo.movietmdb.data.model.MovieListDTO
-import com.demo.movietmdb.domain.mapper.MovieDetailsDtoToModelMapper
-import com.demo.movietmdb.domain.mapper.MovieListDtoToModelMapper
+import com.demo.movietmdb.data.mapper.MovieDetailsDtoToModelMapper
+import com.demo.movietmdb.data.mapper.MovieListDtoToModelMapper
 import com.demo.movietmdb.domain.model.Movie
 import com.demo.movietmdb.domain.model.MovieDetails
 import com.demo.movietmdb.domain.model.MovieList
@@ -149,7 +149,7 @@ class MovieRemoteDataSourceImplTest {
             "posterpath1",
             "tagline",
             "2023-07-26",
-            122,
+            "122",
             "Movie 1",
             ""
         )

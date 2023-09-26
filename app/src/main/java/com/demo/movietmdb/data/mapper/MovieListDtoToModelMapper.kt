@@ -1,4 +1,4 @@
-package com.demo.movietmdb.domain.mapper
+package com.demo.movietmdb.data.mapper
 
 import com.demo.movietmdb.common.AppConstants
 import com.demo.movietmdb.common.Mapper
