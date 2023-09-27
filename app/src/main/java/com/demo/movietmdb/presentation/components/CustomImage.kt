@@ -7,7 +7,7 @@ import androidx.compose.ui.layout.ContentScale
 import coil.compose.rememberAsyncImagePainter
 
 @Composable
-fun MovieImage(
+fun CustomImage(
     modifier: Modifier = Modifier,
     data: Any?,
     contentDescription: String? = null,

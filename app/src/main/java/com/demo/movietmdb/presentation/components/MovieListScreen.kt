@@ -13,7 +13,6 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
@@ -87,8 +86,8 @@ fun MovieGridItem(movie: Movie, selectedMovie: (Int) -> Unit) {
                 .padding(8.dp)
                 .clickable { selectedMovie(movie.id) }
         ) {
-            MovieImage(
-               data = movie.posterPath,
+            CustomImage(
+                data = movie.posterPath,
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
@@ -98,7 +97,7 @@ fun MovieGridItem(movie: Movie, selectedMovie: (Int) -> Unit) {
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            Text(
+            CustomText(
                 movie.title,
                 style = MaterialTheme.typography.bodyLarge,
                 modifier = Modifier
@@ -106,7 +105,7 @@ fun MovieGridItem(movie: Movie, selectedMovie: (Int) -> Unit) {
                     .padding(4.dp),
                 color = Color.Black, maxLines = 1
             )
-            Text(
+            CustomText(
                 movie.releaseDate,
                 style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier
