@@ -45,7 +45,7 @@ class MovieListViewModelTest {
         )
         val apiResponse = ApiResponse.Success(MovieList(movies))
         val mappedResponse = ApiResponse.Success(movies)
-        coEvery { mockGetMoviesUseCase.execute() } returns flowOf(apiResponse)
+        coEvery { mockGetMoviesUseCase() } returns flowOf(apiResponse)
         movieListViewModel.getMovieList()
         Assert.assertEquals(
             mappedResponse.data,
@@ -57,7 +57,7 @@ class MovieListViewModelTest {
     fun `test getMovieList Error`() = runTest {
         val errorMsg="Internal Error"
         val apiResponse = ApiResponse.Error(errorMsg)
-        coEvery { mockGetMoviesUseCase.execute() } returns flowOf(apiResponse)
+        coEvery { mockGetMoviesUseCase() } returns flowOf(apiResponse)
         movieListViewModel.getMovieList()
         Assert.assertEquals(
             apiResponse.message,

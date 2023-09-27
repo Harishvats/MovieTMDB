@@ -1,7 +1,6 @@
 package com.demo.movietmdb.presentation.components
 
 import android.widget.Toast
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -23,7 +22,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import coil.compose.rememberAsyncImagePainter
 import com.demo.movietmdb.R
 import com.demo.movietmdb.common.ApiResponse
 import com.demo.movietmdb.domain.model.Movie
@@ -89,8 +87,8 @@ fun MovieGridItem(movie: Movie, selectedMovie: (Int) -> Unit) {
                 .padding(8.dp)
                 .clickable { selectedMovie(movie.id) }
         ) {
-            Image(
-                painter = rememberAsyncImagePainter(movie.posterPath),
+            MovieImage(
+               data = movie.posterPath,
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier

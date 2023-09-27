@@ -43,7 +43,7 @@ class GetMovieDetailsUseCaseTest {
         val expectedResponse = ApiResponse.Success(movieDetails)
         `when`(mockMovieRepository.getMovieDetails(movieId)).thenReturn(flow { emit(expectedResponse) })
 
-        val result = getMovieDetailsUseCase.execute(movieId)
+        val result = getMovieDetailsUseCase(movieId)
 
         result.collect { response ->
             assert(response is ApiResponse.Success)
@@ -60,7 +60,7 @@ class GetMovieDetailsUseCaseTest {
         val expectedResponse = ApiResponse.Error(errorString)
         `when`(mockMovieRepository.getMovieDetails(movieId)).thenReturn(flow { emit(expectedResponse) })
 
-        val result = getMovieDetailsUseCase.execute(movieId)
+        val result = getMovieDetailsUseCase(movieId)
 
         result.collect { response ->
             assert(response is ApiResponse.Error)

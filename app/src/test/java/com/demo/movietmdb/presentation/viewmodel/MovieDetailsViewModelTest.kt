@@ -45,7 +45,7 @@ class MovieDetailsViewModelTest {
             runtime = "120"
         )
         val apiResponse = ApiResponse.Success(movieDetails)
-        coEvery { mockGetMovieDetailsUseCase.execute(1) } returns flowOf(apiResponse)
+        coEvery { mockGetMovieDetailsUseCase(1) } returns flowOf(apiResponse)
         movieDetailsViewModel.getMovieDetails(1)
         assertEquals(
             apiResponse.data,
@@ -57,7 +57,7 @@ class MovieDetailsViewModelTest {
     fun `test getMovieDetails Error`() = runTest {
         val errorMsg="Internal Error"
         val apiResponse = ApiResponse.Error(errorMsg)
-        coEvery { mockGetMovieDetailsUseCase.execute(1) } returns flowOf(apiResponse)
+        coEvery { mockGetMovieDetailsUseCase(1) } returns flowOf(apiResponse)
         movieDetailsViewModel.getMovieDetails(1)
         assertEquals(
             apiResponse.message,

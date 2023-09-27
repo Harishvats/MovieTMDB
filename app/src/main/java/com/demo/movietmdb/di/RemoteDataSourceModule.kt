@@ -1,4 +1,4 @@
-package com.demo.movietmdb.presentation.di
+package com.demo.movietmdb.di
 
 import com.demo.movietmdb.data.repository.datasource.MovieRemoteDataSource
 import com.demo.movietmdb.data.repository.datasource.MovieRemoteDataSourceImpl

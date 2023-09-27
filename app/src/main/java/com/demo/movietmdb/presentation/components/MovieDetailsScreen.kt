@@ -1,7 +1,6 @@
 package com.demo.movietmdb.presentation.components
 
 import android.widget.Toast
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -20,7 +19,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import coil.compose.rememberAsyncImagePainter
 import com.demo.movietmdb.R
 import com.demo.movietmdb.common.ApiResponse
 import com.demo.movietmdb.domain.model.MovieDetails
@@ -67,8 +65,8 @@ fun MovieCard(movieDetails: MovieDetails, modifier: Modifier) {
             .padding(bottom = 10.dp)
             .verticalScroll(rememberScrollState())
     ) {
-        Image(
-            painter = rememberAsyncImagePainter(movieDetails.backdropPath),
+        MovieImage(
+            data = movieDetails.backdropPath,
             contentDescription = null,
             contentScale = ContentScale.Crop,
             modifier = Modifier

@@ -24,7 +24,7 @@ class MovieDetailsViewModel @Inject constructor(
 
     fun getMovieDetails(movieId: Int) {
         viewModelScope.launch {
-            getMovieDetailsUseCase.execute(movieId).collect() {
+            getMovieDetailsUseCase(movieId).collect() {
                 when (it) {
                     is ApiResponse.Loading -> _movieDetailsStateFlow.value = ApiResponse.Loading
                     is ApiResponse.Error -> _movieDetailsStateFlow.value =

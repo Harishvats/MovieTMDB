@@ -26,7 +26,7 @@ class MovieListViewModel @Inject constructor(private val getMoviesUseCase: GetMo
 
     fun getMovieList() {
         viewModelScope.launch {
-            getMoviesUseCase.execute().collect() {
+            getMoviesUseCase().collect() {
                 when (it) {
                     is ApiResponse.Error -> _movieListStateFlow.value =
                         ApiResponse.Error(it.message)
