@@ -6,6 +6,7 @@ import com.demo.movietmdb.data.api.TMDBService
 import com.demo.movietmdb.data.mapper.MovieDetailsDtoToModelMapper
 import com.demo.movietmdb.data.mapper.MovieListDtoToModelMapper
 import com.demo.movietmdb.data.model.MovieDTO
+import com.demo.movietmdb.data.model.MovieDetailsDTO
 import com.demo.movietmdb.data.model.MovieListDTO
 import com.demo.movietmdb.domain.model.Movie
 import com.demo.movietmdb.domain.model.MovieDetails
@@ -148,7 +149,7 @@ fun `test getMovieDetails success`() = runTest {
     // Arrange
     val movieId = 123
     val movieDetailsDto =
-        com.demo.movietmdb.data.model.MovieDetailsDTO(
+        MovieDetailsDTO(
             "",
             123,
             "Overview",
@@ -185,7 +186,7 @@ fun `test getMovieDetails success`() = runTest {
 @Test
 fun `test getMovieDetails HTTP error`() = runTest {
     val movieId = 123
-    val response = Response.error<com.demo.movietmdb.data.model.MovieDetailsDTO>(
+    val response = Response.error<MovieDetailsDTO>(
         404,
         "".toResponseBody("application/json".toMediaTypeOrNull())
     )
