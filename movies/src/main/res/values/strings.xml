@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">MovieTMDB</string>
+    <string name="title_activity_movie_details">MovieDetailsActivity</string>
+    <string name="overview">Overview</string>
+    <string name="about_movie">About Movie</string>
+    <string name="release_date">Release Date</string>
+    <string name="run_time">Run Time</string>
+    <string name="fetching_details">Fetching Movie Details…</string>
+    <string name="fetching_movies">Fetching Movies…</string>
+</resources>
