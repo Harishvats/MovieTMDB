@@ -2,6 +2,7 @@ package com.demo.tmdb.movies.viewmodel
 
 import com.demo.tmdb.movies.Dispatcher
 import com.demo.movietmdb.common.ApiResponse
+import com.demo.movietmdb.common.ViewState
 import com.demo.movietmdb.domain.model.Movie
 import com.demo.movietmdb.domain.model.MovieList
 import com.demo.movietmdb.domain.usecase.GetMoviesUseCase
@@ -50,7 +51,7 @@ class MovieListViewModelTest {
         movieListViewModel.getMovieList()
         Assert.assertEquals(
             mappedResponse.data,
-            (movieListViewModel.movieListStateFlow.value as ApiResponse.Success).data
+            (movieListViewModel.movieListStateFlow.value as ViewState.SuccessState).data
         )
     }
 
@@ -62,7 +63,7 @@ class MovieListViewModelTest {
         movieListViewModel.getMovieList()
         Assert.assertEquals(
             apiResponse.message,
-            (movieListViewModel.movieListStateFlow.value as ApiResponse.Error).message
+            (movieListViewModel.movieListStateFlow.value as ViewState.ErrorState).message
         )
     }
 }

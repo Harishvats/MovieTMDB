@@ -3,6 +3,7 @@ package com.demo.tmdb.movies.presentation.movielist.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.demo.movietmdb.common.ApiResponse
+import com.demo.movietmdb.common.ViewState
 import com.demo.movietmdb.domain.model.Movie
 import com.demo.movietmdb.domain.usecase.GetMoviesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -16,8 +17,8 @@ class MovieListViewModel @Inject constructor(private val getMoviesUseCase: GetMo
     ViewModel() {
 
     private val _movieListStateFlow =
-        MutableStateFlow<ApiResponse<List<Movie>>>(ApiResponse.Loading)
-    val movieListStateFlow: StateFlow<ApiResponse<List<Movie>>>
+        MutableStateFlow<ViewState<List<Movie>>>(ViewState.LoadingState)
+    val movieListStateFlow: StateFlow<ViewState<List<Movie>>>
         get() = _movieListStateFlow
 
     init {
@@ -29,11 +30,11 @@ class MovieListViewModel @Inject constructor(private val getMoviesUseCase: GetMo
             getMoviesUseCase().collect() {
                 when (it) {
                     is ApiResponse.Error -> _movieListStateFlow.value =
-                        ApiResponse.Error(it.message)
+                        ViewState.ErrorState(it.message)
 
-                    ApiResponse.Loading -> _movieListStateFlow.value = ApiResponse.Loading
+                    ApiResponse.Loading -> _movieListStateFlow.value = ViewState.LoadingState
                     is ApiResponse.Success -> _movieListStateFlow.value =
-                        ApiResponse.Success(it.data.movies)
+                        ViewState.SuccessState(it.data.movies)
                 }
             }
         }

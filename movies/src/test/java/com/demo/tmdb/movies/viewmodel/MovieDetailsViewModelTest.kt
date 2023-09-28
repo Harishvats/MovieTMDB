@@ -1,9 +1,10 @@
 package com.demo.tmdb.movies.viewmodel
 
-import com.demo.tmdb.movies.Dispatcher
 import com.demo.movietmdb.common.ApiResponse
+import com.demo.movietmdb.common.ViewState
 import com.demo.movietmdb.domain.model.MovieDetails
 import com.demo.movietmdb.domain.usecase.GetMovieDetailsUseCase
+import com.demo.tmdb.movies.Dispatcher
 import com.demo.tmdb.movies.presentation.moviedetails.viewmodel.MovieDetailsViewModel
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
@@ -50,19 +51,19 @@ class MovieDetailsViewModelTest {
         movieDetailsViewModel.getMovieDetails(1)
         assertEquals(
             apiResponse.data,
-            (movieDetailsViewModel.movieDetailsStateFlow.value as ApiResponse.Success).data
+            (movieDetailsViewModel.movieDetailsStateFlow.value as ViewState.SuccessState).data
         )
     }
 
     @Test
     fun `test getMovieDetails Error`() = runTest {
-        val errorMsg="Internal Error"
+        val errorMsg = "Internal Error"
         val apiResponse = ApiResponse.Error(errorMsg)
         coEvery { mockGetMovieDetailsUseCase(1) } returns flowOf(apiResponse)
         movieDetailsViewModel.getMovieDetails(1)
         assertEquals(
             apiResponse.message,
-            (movieDetailsViewModel.movieDetailsStateFlow.value as ApiResponse.Error).message
+            (movieDetailsViewModel.movieDetailsStateFlow.value as ViewState.ErrorState).message
         )
     }
 }

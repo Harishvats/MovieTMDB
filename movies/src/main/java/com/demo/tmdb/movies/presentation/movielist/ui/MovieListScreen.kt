@@ -6,7 +6,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import com.demo.movietmdb.common.ApiResponse
+import com.demo.movietmdb.common.ViewState
 import com.demo.movietmdb.domain.model.Movie
 import com.demo.tmdb.movies.R
 import com.demo.tmdb.movies.presentation.movielist.viewmodel.MovieListViewModel
@@ -21,20 +21,20 @@ fun MovieListScreen(
     val context = LocalContext.current
 
     when (resultValue.value) {
-        is ApiResponse.Error -> Toast.makeText(
+        is ViewState.ErrorState -> Toast.makeText(
             context,
-            (resultValue.value as ApiResponse.Error).message,
+            (resultValue.value as ViewState.ErrorState).message,
             Toast.LENGTH_SHORT
         ).show()
 
-        ApiResponse.Loading -> Toast.makeText(
+        is ViewState.LoadingState -> Toast.makeText(
             context,
             stringResource(id = R.string.fetching_movies),
             Toast.LENGTH_SHORT
         ).show()
 
-        is ApiResponse.Success -> MoviesGrid(
-            (resultValue.value as ApiResponse.Success<List<Movie>>).data,
+        is ViewState.SuccessState -> MoviesGrid(
+            (resultValue.value as ViewState.SuccessState<List<Movie>>).data,
             selectedMovie, modifier
         )
     }
