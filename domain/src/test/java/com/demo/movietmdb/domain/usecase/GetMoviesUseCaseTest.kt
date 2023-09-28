@@ -3,26 +3,26 @@ package com.demo.movietmdb.domain.usecase
 import com.demo.movietmdb.domain.model.Movie
 import com.demo.movietmdb.domain.model.MovieList
 import com.demo.movietmdb.domain.repository.MovieRepository
+import io.mockk.MockKAnnotations
+import io.mockk.coEvery
+import io.mockk.impl.annotations.MockK
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
-import org.mockito.Mock
-import org.mockito.Mockito.`when`
-import org.mockito.MockitoAnnotations
 
 
 class GetMoviesUseCaseTest {
 
-    @Mock
+    @MockK
     private lateinit var mockMovieRepository: MovieRepository
 
     private lateinit var getMoviesUseCase: GetMoviesUseCase
 
     @Before
     fun setup() {
-        MockitoAnnotations.openMocks(this)
+        MockKAnnotations.init(this, true)
         getMoviesUseCase = GetMoviesUseCase(mockMovieRepository)
     }
 
@@ -38,7 +38,7 @@ class GetMoviesUseCaseTest {
         )
 
         val expectedResponse = com.demo.movietmdb.common.ApiResponse.Success(MovieList(movies))
-        `when`(mockMovieRepository.getMovies()).thenReturn(flow { emit(expectedResponse) })
+        coEvery { (mockMovieRepository.getMovies()) } returns (flow { emit(expectedResponse) })
 
         val result = getMoviesUseCase()
 
@@ -54,7 +54,7 @@ class GetMoviesUseCaseTest {
     fun `test error in fetch of movie list`() = runTest {
         val errorString = "Internal Server Error"
         val expectedResponse = com.demo.movietmdb.common.ApiResponse.Error(errorString)
-        `when`(mockMovieRepository.getMovies()).thenReturn(flow { emit(expectedResponse) })
+        coEvery { (mockMovieRepository.getMovies()) } returns (flow { emit(expectedResponse) })
 
         val result = getMoviesUseCase()
 

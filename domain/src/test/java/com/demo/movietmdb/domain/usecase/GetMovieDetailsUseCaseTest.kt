@@ -2,17 +2,17 @@ package com.demo.movietmdb.domain.usecase
 
 import com.demo.movietmdb.domain.model.MovieDetails
 import com.demo.movietmdb.domain.repository.MovieRepository
+import io.mockk.MockKAnnotations
+import io.mockk.coEvery
+import io.mockk.impl.annotations.MockK
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
-import org.mockito.Mock
-import org.mockito.Mockito.`when`
-import org.mockito.MockitoAnnotations
 
 class GetMovieDetailsUseCaseTest {
-    @Mock
+    @MockK
     private lateinit var mockMovieRepository: MovieRepository
 
     private lateinit var getMovieDetailsUseCase: GetMovieDetailsUseCase
@@ -21,7 +21,7 @@ class GetMovieDetailsUseCaseTest {
 
     @Before
     fun setup() {
-        MockitoAnnotations.openMocks(this)
+        MockKAnnotations.init(this, true)
         getMovieDetailsUseCase = GetMovieDetailsUseCase(mockMovieRepository)
         movieDetails = MovieDetails(
             id = 12344,
@@ -40,7 +40,11 @@ class GetMovieDetailsUseCaseTest {
     fun `fetch movie details successfully`() = runTest {
         val movieId = 12344
         val expectedResponse = com.demo.movietmdb.common.ApiResponse.Success(movieDetails)
-        `when`(mockMovieRepository.getMovieDetails(movieId)).thenReturn(flow { emit(expectedResponse) })
+        coEvery { (mockMovieRepository.getMovieDetails(movieId)) } returns (flow {
+            emit(
+                expectedResponse
+            )
+        })
 
         val result = getMovieDetailsUseCase(movieId)
 
@@ -57,7 +61,11 @@ class GetMovieDetailsUseCaseTest {
         val movieId = 12344
         val errorString = "Invalid Movie ID"
         val expectedResponse = com.demo.movietmdb.common.ApiResponse.Error(errorString)
-        `when`(mockMovieRepository.getMovieDetails(movieId)).thenReturn(flow { emit(expectedResponse) })
+        coEvery { (mockMovieRepository.getMovieDetails(movieId)) } returns (flow {
+            emit(
+                expectedResponse
+            )
+        })
 
         val result = getMovieDetailsUseCase(movieId)
 

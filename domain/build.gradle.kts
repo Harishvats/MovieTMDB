@@ -35,15 +35,18 @@ android {
 }
 
 dependencies {
+    implementation(project(mapOf("path" to ":common")))
+
 //    Hilt
     implementation("com.google.dagger:hilt-android:2.44.2")
     kapt("com.google.dagger:hilt-android-compiler:2.44.2")
 
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.android.material:material:1.9.0")
-    implementation(project(mapOf("path" to ":common")))
+
+
     testImplementation("junit:junit:4.13.2")
-    testImplementation("org.mockito:mockito-core:5.2.0")
+    testImplementation("io.mockk:mockk:1.13.8")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.1")
 
 }

@@ -1,8 +1,12 @@
 package com.demo.movietmdb.data.repository
 
+import com.demo.movietmdb.common.ApiResponse
 import com.demo.movietmdb.domain.model.MovieDetails
 import com.demo.movietmdb.domain.model.MovieList
 import com.demo.movietmdb.domain.repository.MovieRepository
+import io.mockk.MockKAnnotations
+import io.mockk.coEvery
+import io.mockk.impl.annotations.MockK
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.last
@@ -11,19 +15,16 @@ import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
-import org.mockito.Mock
-import org.mockito.Mockito.`when`
-import org.mockito.MockitoAnnotations
 
 class MovieRepositoryImplTest {
-    @Mock
+    @MockK
     private lateinit var mockMovieRemoteDataSource: com.demo.movietmdb.data.repository.datasource.MovieRemoteDataSource
 
     private lateinit var movieRepository: MovieRepository
 
     @Before
     fun setup() {
-        MockitoAnnotations.openMocks(this)
+        MockKAnnotations.init(this, true)
         movieRepository =
             MovieRepositoryImpl(mockMovieRemoteDataSource)
     }
@@ -31,14 +32,16 @@ class MovieRepositoryImplTest {
     @Test
     fun `test getMovies success`() = runTest {
         // Arrange
-        val expectedApiResponse = com.demo.movietmdb.common.ApiResponse.Success(MovieList(emptyList()))
-        `when`(mockMovieRemoteDataSource.getMovies()).thenReturn(flow { emit(expectedApiResponse) })
+        val expectedApiResponse =
+            ApiResponse.Success(MovieList(emptyList()))
+        coEvery { (mockMovieRemoteDataSource.getMovies()) } returns (flow { emit(expectedApiResponse) })
 
         // Act
-        val resultFlow: Flow<com.demo.movietmdb.common.ApiResponse<MovieList>> = movieRepository.getMovies()
+        val resultFlow: Flow<ApiResponse<MovieList>> =
+            movieRepository.getMovies()
 
         // Assert
-        val resultList: List<com.demo.movietmdb.common.ApiResponse<MovieList>> = resultFlow.toList()
+        val resultList: List<ApiResponse<MovieList>> = resultFlow.toList()
         assertEquals(listOf(expectedApiResponse), resultList)
     }
 
@@ -46,7 +49,7 @@ class MovieRepositoryImplTest {
     fun `test getMovieDetails success`() = runTest {
         // Arrange
         val movieId = 123
-        val expectedApiResponse = com.demo.movietmdb.common.ApiResponse.Success(
+        val expectedApiResponse = ApiResponse.Success(
             MovieDetails(
                 123,
                 "Overview",
@@ -58,17 +61,18 @@ class MovieRepositoryImplTest {
                 ""
             )
         )
-        `when`(mockMovieRemoteDataSource.getMovieDetails(movieId)).thenReturn(flow {
+        coEvery { (mockMovieRemoteDataSource.getMovieDetails(movieId)) } returns (flow {
             emit(
                 expectedApiResponse
             )
         })
 
         // Act
-        val resultFlow: Flow<com.demo.movietmdb.common.ApiResponse<MovieDetails>> = movieRepository.getMovieDetails(movieId)
+        val resultFlow: Flow<ApiResponse<MovieDetails>> =
+            movieRepository.getMovieDetails(movieId)
 
         // Assert
-        val result: com.demo.movietmdb.common.ApiResponse<MovieDetails> = resultFlow.last()
+        val result: ApiResponse<MovieDetails> = resultFlow.last()
         assertEquals(expectedApiResponse, result)
     }
 }
