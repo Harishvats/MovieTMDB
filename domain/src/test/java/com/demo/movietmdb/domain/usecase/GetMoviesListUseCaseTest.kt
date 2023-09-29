@@ -1,9 +1,11 @@
 package com.demo.movietmdb.domain.usecase
 
 import com.demo.movietmdb.common.ApiResponse
-import com.demo.movietmdb.domain.model.Movie
 import com.demo.movietmdb.domain.model.MovieList
 import com.demo.movietmdb.domain.repository.MovieRepository
+import com.demo.movietmdb.domain.usecase.TestData.errorMsg
+import com.demo.movietmdb.domain.usecase.TestData.movie
+import com.demo.movietmdb.domain.usecase.TestData.title
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
@@ -28,32 +30,25 @@ class GetMoviesListUseCaseTest {
     }
 
     @Test
-    fun `getMoviesListUseCase on success returns list of movies as Success ApiResponse`() = runTest {
-        val movies = mutableListOf<Movie>()
-        movies.add(Movie(1, "posterpath1", "2023-07-26", "Movie 1"))
-        movies.add(
-            Movie(2, "posterpath2", "2022-07-02", "Movie 2")
-        )
-        movies.add(
-            Movie(3, "posterpath3", "2022-08-06", "Movie 3")
-        )
+    fun `getMoviesListUseCase on success returns list of movies as Success ApiResponse`() =
+        runTest {
+            val movies = listOf(movie)
+            val expectedResponse = ApiResponse.Success(MovieList(movies))
+            coEvery { (mockMovieRepository.getMovies()) } returns (flow { emit(expectedResponse) })
 
-        val expectedResponse = ApiResponse.Success(MovieList(movies))
-        coEvery { (mockMovieRepository.getMovies()) } returns (flow { emit(expectedResponse) })
+            val result = getMoviesListUseCase()
 
-        val result = getMoviesListUseCase()
-
-        result.collect { response ->
-            assert(response is ApiResponse.Success)
-            val data = (response as ApiResponse.Success).data
-            assert(data.movies.size == 3)
-            assert(data.movies[0].title == "Movie 1")
+            result.collect { response ->
+                assert(response is ApiResponse.Success)
+                val data = (response as ApiResponse.Success).data
+                assert(data.movies.size == 1)
+                assert(data.movies[0].title == title)
+            }
         }
-    }
 
     @Test
     fun `getMoviesListUseCase on error returns error message as Error ApiResponse`() = runTest {
-        val errorString = "Internal Server Error"
+        val errorString = errorMsg
         val expectedResponse = ApiResponse.Error(errorString)
         coEvery { (mockMovieRepository.getMovies()) } returns (flow { emit(expectedResponse) })
 

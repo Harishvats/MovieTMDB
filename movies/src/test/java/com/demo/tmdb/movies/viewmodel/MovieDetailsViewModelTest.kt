@@ -2,8 +2,9 @@ package com.demo.tmdb.movies.viewmodel
 
 import com.demo.movietmdb.common.ApiResponse
 import com.demo.movietmdb.common.ViewState
-import com.demo.movietmdb.domain.model.MovieDetails
 import com.demo.movietmdb.domain.usecase.GetMovieDetailsUseCase
+import com.demo.tmdb.movies.TestData.errorMsg
+import com.demo.tmdb.movies.TestData.movieDetails
 import com.demo.tmdb.movies.Dispatcher
 import com.demo.tmdb.movies.presentation.moviedetails.viewmodel.MovieDetailsViewModel
 import io.mockk.MockKAnnotations
@@ -36,16 +37,6 @@ class MovieDetailsViewModelTest {
 
     @Test
     fun `getMovieDetails on Success returns Success ViewState`() = runTest {
-        val movieDetails = MovieDetails(
-            id = 12344,
-            backdropPath = "",
-            posterPath = "",
-            overview = "Overview of Movie 1",
-            title = "Movie 1",
-            releaseDate = "2022-10-09",
-            tagline = "Movie 1 Tag",
-            runtime = "120"
-        )
         val apiResponse = ApiResponse.Success(movieDetails)
         coEvery { mockGetMovieDetailsUseCase(1) } returns flowOf(apiResponse)
         movieDetailsViewModel.getMovieDetails(1)
@@ -57,7 +48,6 @@ class MovieDetailsViewModelTest {
 
     @Test
     fun `getMovieDetails on Error returns Error ViewState`() = runTest {
-        val errorMsg = "Internal Error"
         val apiResponse = ApiResponse.Error(errorMsg)
         coEvery { mockGetMovieDetailsUseCase(1) } returns flowOf(apiResponse)
         movieDetailsViewModel.getMovieDetails(1)

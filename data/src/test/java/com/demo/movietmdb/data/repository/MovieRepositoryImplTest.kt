@@ -1,6 +1,8 @@
 package com.demo.movietmdb.data.repository
 
 import com.demo.movietmdb.common.ApiResponse
+import com.demo.movietmdb.data.TestData.id
+import com.demo.movietmdb.data.TestData.movieDetails
 import com.demo.movietmdb.domain.model.MovieDetails
 import com.demo.movietmdb.domain.model.MovieList
 import com.demo.movietmdb.domain.repository.MovieRepository
@@ -53,18 +55,9 @@ class MovieRepositoryImplTest {
     @Test
     fun `getMovieDetails on success returns movie details as ApiResponse`() = runTest {
         // Arrange
-        val movieId = 123
+        val movieId = id
         val expectedApiResponse = ApiResponse.Success(
-            MovieDetails(
-                123,
-                "Overview",
-                "posterpath1",
-                "tagline",
-                "2023-07-26",
-                "122",
-                "Movie 1",
-                ""
-            )
+            movieDetails
         )
         coEvery { (mockMovieRemoteDataSource.getMovieDetails(movieId)) } returns (flow {
             emit(

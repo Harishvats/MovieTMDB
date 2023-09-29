@@ -1,8 +1,8 @@
 package com.demo.movietmdb.data.mapper
 
-import com.demo.movietmdb.data.model.MovieDTO
+import com.demo.movietmdb.data.TestData.movie
+import com.demo.movietmdb.data.TestData.movieDTO
 import com.demo.movietmdb.data.model.MovieListDTO
-import com.demo.movietmdb.domain.model.Movie
 import com.demo.movietmdb.domain.model.MovieList
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
@@ -26,44 +26,15 @@ class MovieListDtoToModelMapperTest {
 
     @Test
     fun `MovieListDtoToModelMapper maps MovieListDTO to MovieList model`() {
-        val movieListDTO = createFakeMovieListDTO()
-        coEvery { movieDtoToModelMapper.mapFrom(any()) } returns (Movie(1, "posterpath1", "", ""))
-        val movieList = mapper.mapFrom(movieListDTO)
+        val movieListDTO = MovieListDTO(listOf(movieDTO))
+        val movieList = MovieList(listOf(movie))
+        coEvery { movieDtoToModelMapper.mapFrom(any()) } returns (movie)
+        val mappedMovieList = mapper.mapFrom(movieListDTO)
         Assert.assertEquals(
-            movieList.movies[0].posterPath,
-            createFakeMovieList().movies[0].posterPath
+            mappedMovieList.movies[0].posterPath,
+            movieList.movies[0].posterPath
         )
     }
 
-    private fun createFakeMovieListDTO(): MovieListDTO {
-        val moviesDTO = mutableListOf<MovieDTO>()
-        moviesDTO.add(
-            MovieDTO(
-                1,
-                "posterpath1",
-                "2023-07-26",
-                "Movie 1"
-            )
-        )
-        moviesDTO.add(
-            MovieDTO(2, "posterpath2", "2022-07-02", "Movie 2")
-        )
-        moviesDTO.add(
-            MovieDTO(3, "posterpath3", "2022-08-06", "Movie 3")
-        )
-        return MovieListDTO(moviesDTO)
 
-    }
-
-    private fun createFakeMovieList(): MovieList {
-        val movies = mutableListOf<Movie>()
-        movies.add(Movie(1, "posterpath1", "2023-07-26", "Movie 1"))
-        movies.add(
-            Movie(2, "posterpath2", "2022-07-02", "Movie 2")
-        )
-        movies.add(
-            Movie(3, "posterpath3", "2022-08-06", "Movie 3")
-        )
-        return MovieList(movies)
-    }
 }
