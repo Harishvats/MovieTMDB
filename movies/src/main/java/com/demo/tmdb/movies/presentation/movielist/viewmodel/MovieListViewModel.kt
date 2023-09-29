@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.demo.movietmdb.common.ApiResponse
 import com.demo.movietmdb.common.ViewState
 import com.demo.movietmdb.domain.model.Movie
-import com.demo.movietmdb.domain.usecase.GetMoviesUseCase
+import com.demo.movietmdb.domain.usecase.GetMoviesListUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -13,7 +13,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class MovieListViewModel @Inject constructor(private val getMoviesUseCase: GetMoviesUseCase) :
+class MovieListViewModel @Inject constructor(private val getMoviesListUseCase: GetMoviesListUseCase) :
     ViewModel() {
 
     private val _movieListStateFlow =
@@ -27,7 +27,7 @@ class MovieListViewModel @Inject constructor(private val getMoviesUseCase: GetMo
 
     fun getMovieList() {
         viewModelScope.launch {
-            getMoviesUseCase().collect() {
+            getMoviesListUseCase().collect() {
                 when (it) {
                     is ApiResponse.Error -> _movieListStateFlow.value =
                         ViewState.ErrorState(it.message)

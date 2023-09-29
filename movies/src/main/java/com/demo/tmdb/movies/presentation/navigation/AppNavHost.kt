@@ -1,4 +1,4 @@
-package com.demo.tmdb.movies.presentation.components
+package com.demo.tmdb.movies.presentation.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier

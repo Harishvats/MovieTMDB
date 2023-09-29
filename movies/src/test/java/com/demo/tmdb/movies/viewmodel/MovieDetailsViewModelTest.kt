@@ -35,7 +35,7 @@ class MovieDetailsViewModelTest {
     }
 
     @Test
-    fun `test getMovieDetails Success`() = runTest {
+    fun `getMovieDetails on Success returns Success ViewState`() = runTest {
         val movieDetails = MovieDetails(
             id = 12344,
             backdropPath = "",
@@ -56,7 +56,7 @@ class MovieDetailsViewModelTest {
     }
 
     @Test
-    fun `test getMovieDetails Error`() = runTest {
+    fun `getMovieDetails on Error returns Error ViewState`() = runTest {
         val errorMsg = "Internal Error"
         val apiResponse = ApiResponse.Error(errorMsg)
         coEvery { mockGetMovieDetailsUseCase(1) } returns flowOf(apiResponse)

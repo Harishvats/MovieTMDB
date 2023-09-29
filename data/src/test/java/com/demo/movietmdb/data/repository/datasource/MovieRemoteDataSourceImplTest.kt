@@ -49,7 +49,7 @@ class MovieRemoteDataSourceImplTest {
     }
 
     @Test
-    fun `test get Movies list success`() = runTest {
+    fun `getMovies() on success returns flow of Success ApiResponse`() = runTest {
         val moviesDTO = mutableListOf<MovieDTO>()
         moviesDTO.add(
             MovieDTO(
@@ -92,7 +92,7 @@ class MovieRemoteDataSourceImplTest {
     }
 
     @Test
-    fun `test getMovies HTTP error`() = runTest {
+    fun `getMovies() on error returns flow of Error ApiResponse`() = runTest {
         // Arrange
         val response = Response.error<MovieListDTO>(
             404,
@@ -110,136 +110,142 @@ class MovieRemoteDataSourceImplTest {
     }
 
     @Test
-    fun `test getMovies HttpException`() = runTest {
-        val response = Response.error<MovieListDTO>(
+    fun `getMovies() on HttpException in api call returns flow of Error ApiResponse with exception message`() =
+        runTest {
+            val response = Response.error<MovieListDTO>(
+                404,
+                "".toResponseBody("application/json".toMediaTypeOrNull())
+            )
+            coEvery {
+                (mockTmdbService.getMovies(BuildConfig.API_KEY))
+            } answers {
+                throw HttpException(
+                    response
+                )
+            }
+
+            // Act
+            val result = movieRemoteDataSource.getMovies().last()
+
+            assertEquals(
+                ApiResponse.Error("HTTP 404 Response.error()"),
+                result
+            )
+        }
+
+    @Test
+    fun `getMovies() on IOException in api call returns flow of Error ApiResponse with exception message`() =
+        runTest {
+
+            coEvery {
+                (mockTmdbService.getMovies(BuildConfig.API_KEY))
+            } answers { throw IOException("IO Error") }
+
+            // Act
+            val result = movieRemoteDataSource.getMovies().last()
+
+            assertEquals(ApiResponse.Error("IO Error"), result)
+        }
+
+    @Test
+    fun `getMovieDetails on success in api call returns flow of Success movie details ApiResponse`() =
+        runTest {
+            // Arrange
+            val movieId = 123
+            val movieDetailsDto =
+                MovieDetailsDTO(
+                    "",
+                    123,
+                    "Overview",
+                    "posterpath1",
+                    "2023-07-26",
+                    122,
+                    "tagline",
+                    "Movie 1"
+                )
+            val expectedMovieDetails = MovieDetails(
+                123,
+                "Overview",
+                "posterpath1",
+                "tagline",
+                "2023-07-26",
+                "122",
+                "Movie 1",
+                ""
+            )
+            coEvery { (mockTmdbService.getMovieDetails(movieId, BuildConfig.API_KEY)) } returns (
+                    Response.success(movieDetailsDto)
+                    )
+            coEvery { (mockMovieDetailsDtoToModelMapper.mapFrom(movieDetailsDto)) } returns (
+                    expectedMovieDetails
+                    )
+
+            // Act
+            val result = movieRemoteDataSource.getMovieDetails(movieId).last()
+
+            assertEquals(ApiResponse.Success(expectedMovieDetails), result)
+        }
+
+
+    @Test
+    fun `getMovieDetails on Error in api call returns flow of Error ApiResponse`() = runTest {
+        val movieId = 123
+        val response = Response.error<MovieDetailsDTO>(
             404,
             "".toResponseBody("application/json".toMediaTypeOrNull())
         )
         coEvery {
-            (mockTmdbService.getMovies(BuildConfig.API_KEY))
-        } answers {
-            throw HttpException(
-                response
-            )
-        }
+            (mockTmdbService.getMovieDetails(
+                movieId,
+                BuildConfig.API_KEY
+            ))
+        } returns (response)
 
         // Act
-        val result = movieRemoteDataSource.getMovies().last()
+        val result = movieRemoteDataSource.getMovieDetails(movieId).last()
 
         assertEquals(
-            ApiResponse.Error("HTTP 404 Response.error()"),
-            result
+            "Response.error()",
+            (result as ApiResponse.Error).message
         )
+
     }
 
     @Test
-    fun `test getMovies IOException`() = runTest {
-
-        coEvery {(mockTmdbService.getMovies(BuildConfig.API_KEY))
-    } answers { throw IOException("IO Error") }
-
-    // Act
-    val result = movieRemoteDataSource.getMovies().last()
-
-    assertEquals(ApiResponse.Error("IO Error"), result)
-}
-
-@Test
-fun `test getMovieDetails success`() = runTest {
-    // Arrange
-    val movieId = 123
-    val movieDetailsDto =
-        MovieDetailsDTO(
-            "",
-            123,
-            "Overview",
-            "posterpath1",
-            "2023-07-26",
-            122,
-            "tagline",
-            "Movie 1"
-        )
-    val expectedMovieDetails = MovieDetails(
-        123,
-        "Overview",
-        "posterpath1",
-        "tagline",
-        "2023-07-26",
-        "122",
-        "Movie 1",
-        ""
-    )
-    coEvery { (mockTmdbService.getMovieDetails(movieId, BuildConfig.API_KEY)) } returns (
-            Response.success(movieDetailsDto)
+    fun `getMovieDetails on HttpException in api call returns flow of Error ApiResponse with exception message`() =
+        runTest {
+            val movieId = 123
+            val response = Response.error<MovieListDTO>(
+                404,
+                "".toResponseBody("application/json".toMediaTypeOrNull())
             )
-    coEvery { (mockMovieDetailsDtoToModelMapper.mapFrom(movieDetailsDto)) } returns (
-            expectedMovieDetails
+            coEvery { (mockTmdbService.getMovieDetails(movieId, BuildConfig.API_KEY)) } answers {
+                throw HttpException(
+                    response
+                )
+            }
+
+            // Act
+            val result = movieRemoteDataSource.getMovieDetails(movieId).last()
+
+            assertEquals(
+                ApiResponse.Error("HTTP 404 Response.error()"),
+                result
             )
+        }
 
-    // Act
-    val result = movieRemoteDataSource.getMovieDetails(movieId).last()
+    @Test
+    fun `getMovieDetails on IOException in api call returns flow of Error ApiResponse with exception message`() =
+        runTest {
+            val movieId = 123
+            coEvery { (mockTmdbService.getMovieDetails(movieId, BuildConfig.API_KEY)) } answers {
+                throw IOException("IO Error")
+            }
 
-    assertEquals(ApiResponse.Success(expectedMovieDetails), result)
-}
+            // Act
+            val result = movieRemoteDataSource.getMovieDetails(movieId).last()
 
-
-@Test
-fun `test getMovieDetails HTTP error`() = runTest {
-    val movieId = 123
-    val response = Response.error<MovieDetailsDTO>(
-        404,
-        "".toResponseBody("application/json".toMediaTypeOrNull())
-    )
-    coEvery {
-        (mockTmdbService.getMovieDetails(
-            movieId,
-            BuildConfig.API_KEY
-        ))
-    } returns (response)
-
-    // Act
-    val result = movieRemoteDataSource.getMovieDetails(movieId).last()
-
-    assertEquals(
-        "Response.error()",
-        (result as ApiResponse.Error).message
-    )
-
-}
-
-@Test
-fun `test getMovieDetails HttpException`() = runTest {
-    val movieId = 123
-    val response = Response.error<MovieListDTO>(
-        404,
-        "".toResponseBody("application/json".toMediaTypeOrNull())
-    )
-    coEvery { (mockTmdbService.getMovieDetails(movieId, BuildConfig.API_KEY)) } answers {
-        throw HttpException(
-            response
-        )
-    }
-
-    // Act
-    val result = movieRemoteDataSource.getMovieDetails(movieId).last()
-
-    assertEquals(
-        ApiResponse.Error("HTTP 404 Response.error()"),
-        result
-    )
-}
-
-@Test
-fun `test getMovieDetails IOException`() = runTest {
-    val movieId = 123
-    coEvery { (mockTmdbService.getMovieDetails(movieId, BuildConfig.API_KEY)) } answers {
-        throw IOException("IO Error")
-    }
-
-    // Act
-    val result = movieRemoteDataSource.getMovieDetails(movieId).last()
-
-    assertEquals(ApiResponse.Error("IO Error"), result)
-}
+            assertEquals(ApiResponse.Error("IO Error"), result)
+        }
 
 }

@@ -1,5 +1,6 @@
 package com.demo.movietmdb.domain.usecase
 
+import com.demo.movietmdb.common.ApiResponse
 import com.demo.movietmdb.domain.model.MovieDetails
 import com.demo.movietmdb.domain.repository.MovieRepository
 import io.mockk.MockKAnnotations
@@ -37,42 +38,44 @@ class GetMovieDetailsUseCaseTest {
     }
 
     @Test
-    fun `fetch movie details successfully`() = runTest {
-        val movieId = 12344
-        val expectedResponse = com.demo.movietmdb.common.ApiResponse.Success(movieDetails)
-        coEvery { (mockMovieRepository.getMovieDetails(movieId)) } returns (flow {
-            emit(
-                expectedResponse
-            )
-        })
+    fun `getMovieDetailsUseCase on Success result from repository returns movie details as Success APiResponse`() =
+        runTest {
+            val movieId = 12344
+            val expectedResponse = ApiResponse.Success(movieDetails)
+            coEvery { (mockMovieRepository.getMovieDetails(movieId)) } returns (flow {
+                emit(
+                    expectedResponse
+                )
+            })
 
-        val result = getMovieDetailsUseCase(movieId)
+            val result = getMovieDetailsUseCase(movieId)
 
-        result.collect { response ->
-            assert(response is com.demo.movietmdb.common.ApiResponse.Success)
-            val data = (response as com.demo.movietmdb.common.ApiResponse.Success).data
-            assert(data.id == movieId)
-            assert(data.title == "Movie 1")
+            result.collect { response ->
+                assert(response is ApiResponse.Success)
+                val data = (response as ApiResponse.Success).data
+                assert(data.id == movieId)
+                assert(data.title == "Movie 1")
+            }
         }
-    }
 
     @Test
-    fun `error in fetching movie details`() = runTest {
-        val movieId = 12344
-        val errorString = "Invalid Movie ID"
-        val expectedResponse = com.demo.movietmdb.common.ApiResponse.Error(errorString)
-        coEvery { (mockMovieRepository.getMovieDetails(movieId)) } returns (flow {
-            emit(
-                expectedResponse
-            )
-        })
+    fun `getMovieDetailsUseCase on Error from repository returns error message as Error APiResponse`() =
+        runTest {
+            val movieId = 12344
+            val errorString = "Invalid Movie ID"
+            val expectedResponse = ApiResponse.Error(errorString)
+            coEvery { (mockMovieRepository.getMovieDetails(movieId)) } returns (flow {
+                emit(
+                    expectedResponse
+                )
+            })
 
-        val result = getMovieDetailsUseCase(movieId)
+            val result = getMovieDetailsUseCase(movieId)
 
-        result.collect { response ->
-            assert(response is com.demo.movietmdb.common.ApiResponse.Error)
-            val errorMsg = (response as com.demo.movietmdb.common.ApiResponse.Error).message
-            Assert.assertEquals(errorMsg, errorString)
+            result.collect { response ->
+                assert(response is ApiResponse.Error)
+                val errorMsg = (response as ApiResponse.Error).message
+                Assert.assertEquals(errorMsg, errorString)
+            }
         }
-    }
 }

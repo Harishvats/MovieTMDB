@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 
-class GetMoviesUseCase @Inject constructor(private val movieRepository: MovieRepository) {
+class GetMoviesListUseCase @Inject constructor(private val movieRepository: MovieRepository) {
     suspend operator fun invoke(): Flow<ApiResponse<MovieList>> = movieRepository.getMovies()
 }   
 

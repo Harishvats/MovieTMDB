@@ -16,7 +16,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import com.demo.tmdb.movies.presentation.components.AppNavHost
+import com.demo.tmdb.movies.presentation.navigation.AppNavHost
 import com.demo.movietmdb.presentation.ui.theme.MovieTMDBTheme
 import com.demo.tmdb.movies.presentation.moviedetails.viewmodel.MovieDetailsViewModel
 import com.demo.tmdb.movies.presentation.movielist.viewmodel.MovieListViewModel

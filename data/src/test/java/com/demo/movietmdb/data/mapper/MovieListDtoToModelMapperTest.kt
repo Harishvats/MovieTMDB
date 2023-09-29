@@ -25,7 +25,7 @@ class MovieListDtoToModelMapperTest {
 
 
     @Test
-    fun `MovieListDTO maps to MovieList model`() {
+    fun `MovieListDtoToModelMapper maps MovieListDTO to MovieList model`() {
         val movieListDTO = createFakeMovieListDTO()
         coEvery { movieDtoToModelMapper.mapFrom(any()) } returns (Movie(1, "posterpath1", "", ""))
         val movieList = mapper.mapFrom(movieListDTO)

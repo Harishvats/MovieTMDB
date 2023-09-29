@@ -30,23 +30,28 @@ class MovieRepositoryImplTest {
     }
 
     @Test
-    fun `test getMovies success`() = runTest {
-        // Arrange
-        val expectedApiResponse =
-            ApiResponse.Success(MovieList(emptyList()))
-        coEvery { (mockMovieRemoteDataSource.getMovies()) } returns (flow { emit(expectedApiResponse) })
+    fun `getMovies on getting result from MovieRemoteDataSource returns movie list as flow of Success ApiResponse`() =
+        runTest {
+            // Arrange
+            val expectedApiResponse =
+                ApiResponse.Success(MovieList(emptyList()))
+            coEvery { (mockMovieRemoteDataSource.getMovies()) } returns (flow {
+                emit(
+                    expectedApiResponse
+                )
+            })
 
-        // Act
-        val resultFlow: Flow<ApiResponse<MovieList>> =
-            movieRepository.getMovies()
+            // Act
+            val resultFlow: Flow<ApiResponse<MovieList>> =
+                movieRepository.getMovies()
 
-        // Assert
-        val resultList: List<ApiResponse<MovieList>> = resultFlow.toList()
-        assertEquals(listOf(expectedApiResponse), resultList)
-    }
+            // Assert
+            val resultList: List<ApiResponse<MovieList>> = resultFlow.toList()
+            assertEquals(listOf(expectedApiResponse), resultList)
+        }
 
     @Test
-    fun `test getMovieDetails success`() = runTest {
+    fun `getMovieDetails on success returns movie details as ApiResponse`() = runTest {
         // Arrange
         val movieId = 123
         val expectedApiResponse = ApiResponse.Success(

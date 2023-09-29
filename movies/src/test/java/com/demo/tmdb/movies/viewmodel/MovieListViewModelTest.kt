@@ -5,7 +5,7 @@ import com.demo.movietmdb.common.ApiResponse
 import com.demo.movietmdb.common.ViewState
 import com.demo.movietmdb.domain.model.Movie
 import com.demo.movietmdb.domain.model.MovieList
-import com.demo.movietmdb.domain.usecase.GetMoviesUseCase
+import com.demo.movietmdb.domain.usecase.GetMoviesListUseCase
 import com.demo.tmdb.movies.presentation.movielist.viewmodel.MovieListViewModel
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
@@ -21,7 +21,7 @@ import org.junit.Test
 class MovieListViewModelTest {
 
     @RelaxedMockK
-    private lateinit var mockGetMoviesUseCase: GetMoviesUseCase
+    private lateinit var mockGetMoviesListUseCase: GetMoviesListUseCase
 
     private lateinit var movieListViewModel: MovieListViewModel
 
@@ -32,11 +32,11 @@ class MovieListViewModelTest {
     @Before
     fun setup() {
         MockKAnnotations.init(this, true)
-        movieListViewModel = MovieListViewModel(mockGetMoviesUseCase)
+        movieListViewModel = MovieListViewModel(mockGetMoviesListUseCase)
     }
 
     @Test
-    fun `test getMovieList Success`() = runTest {
+    fun `getMovieList on Success returns Success ViewState`() = runTest {
         val movies = mutableListOf<Movie>()
         movies.add(Movie(1, "posterpath1", "2023-07-26", "Movie 1"))
         movies.add(
@@ -47,7 +47,7 @@ class MovieListViewModelTest {
         )
         val apiResponse = ApiResponse.Success(MovieList(movies))
         val mappedResponse = ApiResponse.Success(movies)
-        coEvery { mockGetMoviesUseCase() } returns flowOf(apiResponse)
+        coEvery { mockGetMoviesListUseCase() } returns flowOf(apiResponse)
         movieListViewModel.getMovieList()
         Assert.assertEquals(
             mappedResponse.data,
@@ -56,10 +56,10 @@ class MovieListViewModelTest {
     }
 
     @Test
-    fun `test getMovieList Error`() = runTest {
-        val errorMsg="Internal Error"
+    fun `getMovieList on Error returns Error ViewState`() = runTest {
+        val errorMsg = "Internal Error"
         val apiResponse = ApiResponse.Error(errorMsg)
-        coEvery { mockGetMoviesUseCase() } returns flowOf(apiResponse)
+        coEvery { mockGetMoviesListUseCase() } returns flowOf(apiResponse)
         movieListViewModel.getMovieList()
         Assert.assertEquals(
             apiResponse.message,
