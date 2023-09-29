@@ -42,26 +42,27 @@ android {
 
 dependencies {
 
-    //    Hilt
-    implementation("com.google.dagger:hilt-android:2.44.2")
     implementation(project(mapOf("path" to ":common")))
     implementation(project(mapOf("path" to ":domain")))
     implementation(project(mapOf("path" to ":data")))
-    kapt("com.google.dagger:hilt-android-compiler:2.44.2")
+
+    //    Hilt
+    implementation(libs.hilt.android)
+    kapt(libs.hilt.android.compiler)
 
 
-    implementation("androidx.activity:activity-compose:1.7.2")
+    implementation(libs.activity.compose)
     implementation(platform("androidx.compose:compose-bom:2023.03.00"))
     implementation("androidx.compose.material3:material3")
-    implementation("androidx.navigation:navigation-compose:2.6.0")
+    implementation(libs.navigation.compose)
 
 //    Compose Image
-    implementation("io.coil-kt:coil-compose:2.4.0")
+    implementation(libs.coil.compose)
 
 
-    testImplementation("junit:junit:4.13.2")
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.1")
-    testImplementation("io.mockk:mockk:1.13.8")
+    testImplementation(libs.junit)
+    testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.mockk)
 
 
 }

@@ -31,8 +31,3 @@ android {
         jvmTarget = "1.8"
     }
 }
-
-dependencies {
-
-    implementation("androidx.appcompat:appcompat:1.6.1")
-}
