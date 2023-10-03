@@ -1,4 +1,4 @@
-package com.demo.movietmdb.presentation.components
+package com.demo.tmdb.movies.presentation.components
 
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable

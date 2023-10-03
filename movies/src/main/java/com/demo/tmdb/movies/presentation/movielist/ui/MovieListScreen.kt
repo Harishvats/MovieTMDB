@@ -14,7 +14,7 @@ import com.demo.tmdb.movies.presentation.movielist.viewmodel.MovieListViewModel
 @Composable
 fun MovieListScreen(
     movieListViewModel: MovieListViewModel,
-    selectedMovie: (Int) -> Unit,
+    selectedMovie: (Int, String) -> Unit,
     modifier: Modifier
 ) {
     val resultValue = movieListViewModel.movieListStateFlow.collectAsState()

@@ -15,11 +15,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import com.demo.movietmdb.domain.model.Movie
-import com.demo.movietmdb.presentation.components.CustomImage
-import com.demo.movietmdb.presentation.components.CustomText
+import com.demo.tmdb.movies.presentation.components.CustomImage
+import com.demo.tmdb.movies.presentation.components.CustomText
 
 @Composable
-fun MovieGridItem(movie: Movie, selectedMovie: (Int) -> Unit) {
+fun MovieGridItem(movie: Movie, selectedMovie: (Int, String) -> Unit) {
 
     Card(
         modifier = Modifier
@@ -33,7 +33,7 @@ fun MovieGridItem(movie: Movie, selectedMovie: (Int) -> Unit) {
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(8.dp)
-                .clickable { selectedMovie(movie.id) }
+                .clickable { selectedMovie(movie.id, movie.title) }
         ) {
             CustomImage(
                 data = movie.posterPath,

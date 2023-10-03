@@ -15,8 +15,8 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.demo.movietmdb.domain.model.MovieDetails
-import com.demo.movietmdb.presentation.components.CustomImage
-import com.demo.movietmdb.presentation.components.CustomText
+import com.demo.tmdb.movies.presentation.components.CustomImage
+import com.demo.tmdb.movies.presentation.components.CustomText
 import com.demo.tmdb.movies.R
 
 @Composable

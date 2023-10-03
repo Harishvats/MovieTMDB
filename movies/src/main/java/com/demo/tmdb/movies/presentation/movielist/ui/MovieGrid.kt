@@ -9,7 +9,11 @@ import androidx.compose.ui.unit.dp
 import com.demo.movietmdb.domain.model.Movie
 
 @Composable
-fun MoviesGrid(movieList: List<Movie>, selectedMovie: (Int) -> Unit, modifier: Modifier) {
+fun MoviesGrid(
+    movieList: List<Movie>,
+    selectedMovie: (Int,String) -> Unit,
+    modifier: Modifier
+) {
 
     LazyVerticalGrid(
         modifier = modifier,
