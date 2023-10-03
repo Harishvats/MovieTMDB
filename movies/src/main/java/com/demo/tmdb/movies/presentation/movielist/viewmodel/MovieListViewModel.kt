@@ -2,7 +2,7 @@ package com.demo.tmdb.movies.presentation.movielist.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.demo.movietmdb.common.ApiResponse
+import com.demo.movietmdb.common.Response
 import com.demo.movietmdb.common.ViewState
 import com.demo.movietmdb.domain.model.Movie
 import com.demo.movietmdb.domain.usecase.GetMoviesListUseCase
@@ -29,11 +29,11 @@ class MovieListViewModel @Inject constructor(private val getMoviesListUseCase: G
         viewModelScope.launch {
             getMoviesListUseCase().collect() {
                 when (it) {
-                    is ApiResponse.Error -> _movieListStateFlow.value =
+                    is Response.Error -> _movieListStateFlow.value =
                         ViewState.ErrorState(it.message)
 
-                    ApiResponse.Loading -> _movieListStateFlow.value = ViewState.LoadingState
-                    is ApiResponse.Success -> _movieListStateFlow.value =
+                    Response.Loading -> _movieListStateFlow.value = ViewState.LoadingState
+                    is Response.Success -> _movieListStateFlow.value =
                         ViewState.SuccessState(it.data.movies)
                 }
             }

@@ -1,6 +1,5 @@
 package com.demo.movietmdb.data.repository.datasource
 
-import com.demo.movietmdb.common.ApiResponse
 import com.demo.movietmdb.data.BuildConfig
 import com.demo.movietmdb.data.TestData
 import com.demo.movietmdb.data.TestData.IOResponseErrorMessage
@@ -27,7 +26,6 @@ import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import retrofit2.HttpException
-import retrofit2.Response
 import java.io.IOException
 
 class MovieRemoteDataSourceImplTest {
@@ -62,7 +60,7 @@ class MovieRemoteDataSourceImplTest {
         val expectedMovieList = MovieList(movies)
 
         coEvery { (mockTmdbService.getMovies(BuildConfig.API_KEY)) } returns (
-                Response.success(
+                retrofit2.Response.success(
                     movieListDto
                 )
                 )
@@ -72,13 +70,13 @@ class MovieRemoteDataSourceImplTest {
         val result = movieRemoteDataSource.getMovies().last()
 
         // Assert
-        assertEquals(ApiResponse.Success(expectedMovieList), result)
+        assertEquals(com.demo.movietmdb.common.Response.Success(expectedMovieList), result)
     }
 
     @Test
     fun `getMovies() on error returns flow of Error ApiResponse`() = runTest {
         // Arrange
-        val response = Response.error<MovieListDTO>(
+        val response = retrofit2.Response.error<MovieListDTO>(
             errorCode,
             "".toResponseBody(responseBody)
         )
@@ -89,14 +87,14 @@ class MovieRemoteDataSourceImplTest {
 
         assertEquals(
             responseErrorMessage,
-            (result as ApiResponse.Error).message
+            (result as com.demo.movietmdb.common.Response.Error).message
         )
     }
 
     @Test
     fun `getMovies() on HttpException in api call returns flow of Error ApiResponse with exception message`() =
         runTest {
-            val response = Response.error<MovieListDTO>(
+            val response = retrofit2.Response.error<MovieListDTO>(
                 errorCode,
                 "".toResponseBody(responseBody)
             )
@@ -112,7 +110,7 @@ class MovieRemoteDataSourceImplTest {
             val result = movieRemoteDataSource.getMovies().last()
 
             assertEquals(
-                ApiResponse.Error(httpResponseErrorMessage),
+                com.demo.movietmdb.common.Response.Error(httpResponseErrorMessage),
                 result
             )
         }
@@ -128,7 +126,7 @@ class MovieRemoteDataSourceImplTest {
             // Act
             val result = movieRemoteDataSource.getMovies().last()
 
-            assertEquals(ApiResponse.Error(IOResponseErrorMessage), result)
+            assertEquals(com.demo.movietmdb.common.Response.Error(IOResponseErrorMessage), result)
         }
 
     @Test
@@ -139,7 +137,7 @@ class MovieRemoteDataSourceImplTest {
             val movieDetailsDto = movieDetailsDTO
             val expectedMovieDetails = movieDetails
             coEvery { (mockTmdbService.getMovieDetails(movieId, BuildConfig.API_KEY)) } returns (
-                    Response.success(movieDetailsDto)
+                    retrofit2.Response.success(movieDetailsDto)
                     )
             coEvery { (mockMovieDetailsDtoToModelMapper.mapFrom(movieDetailsDto)) } returns (
                     expectedMovieDetails
@@ -148,14 +146,14 @@ class MovieRemoteDataSourceImplTest {
             // Act
             val result = movieRemoteDataSource.getMovieDetails(movieId).last()
 
-            assertEquals(ApiResponse.Success(expectedMovieDetails), result)
+            assertEquals(com.demo.movietmdb.common.Response.Success(expectedMovieDetails), result)
         }
 
 
     @Test
     fun `getMovieDetails on Error in api call returns flow of Error ApiResponse`() = runTest {
         val movieId = id
-        val response = Response.error<MovieDetailsDTO>(
+        val response = retrofit2.Response.error<MovieDetailsDTO>(
             errorCode,
             "".toResponseBody(responseBody)
         )
@@ -171,7 +169,7 @@ class MovieRemoteDataSourceImplTest {
 
         assertEquals(
             responseErrorMessage,
-            (result as ApiResponse.Error).message
+            (result as com.demo.movietmdb.common.Response.Error).message
         )
 
     }
@@ -180,7 +178,7 @@ class MovieRemoteDataSourceImplTest {
     fun `getMovieDetails on HttpException in api call returns flow of Error ApiResponse with exception message`() =
         runTest {
             val movieId = id
-            val response = Response.error<MovieListDTO>(
+            val response = retrofit2.Response.error<MovieListDTO>(
                 errorCode,
                 "".toResponseBody(responseBody)
             )
@@ -194,7 +192,7 @@ class MovieRemoteDataSourceImplTest {
             val result = movieRemoteDataSource.getMovieDetails(movieId).last()
 
             assertEquals(
-                ApiResponse.Error(httpResponseErrorMessage),
+                com.demo.movietmdb.common.Response.Error(httpResponseErrorMessage),
                 result
             )
         }
@@ -210,7 +208,7 @@ class MovieRemoteDataSourceImplTest {
             // Act
             val result = movieRemoteDataSource.getMovieDetails(movieId).last()
 
-            assertEquals(ApiResponse.Error(IOResponseErrorMessage), result)
+            assertEquals(com.demo.movietmdb.common.Response.Error(IOResponseErrorMessage), result)
         }
 
 }

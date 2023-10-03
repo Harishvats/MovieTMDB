@@ -2,7 +2,7 @@ package com.demo.tmdb.movies.presentation.moviedetails.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.demo.movietmdb.common.ApiResponse
+import com.demo.movietmdb.common.Response
 import com.demo.movietmdb.common.ViewState
 import com.demo.movietmdb.domain.model.MovieDetails
 import com.demo.movietmdb.domain.usecase.GetMovieDetailsUseCase
@@ -27,11 +27,11 @@ class MovieDetailsViewModel @Inject constructor(
         viewModelScope.launch {
             getMovieDetailsUseCase(movieId).collect() {
                 when (it) {
-                    is ApiResponse.Loading -> _movieDetailsStateFlow.value = ViewState.LoadingState
-                    is ApiResponse.Error -> _movieDetailsStateFlow.value =
+                    is Response.Loading -> _movieDetailsStateFlow.value = ViewState.LoadingState
+                    is Response.Error -> _movieDetailsStateFlow.value =
                         ViewState.ErrorState(it.message)
 
-                    is ApiResponse.Success -> _movieDetailsStateFlow.value =
+                    is Response.Success -> _movieDetailsStateFlow.value =
                         ViewState.SuccessState(it.data)
                 }
             }

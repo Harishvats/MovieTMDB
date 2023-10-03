@@ -1,6 +1,6 @@
 package com.demo.movietmdb.data.repository
 
-import com.demo.movietmdb.common.ApiResponse
+import com.demo.movietmdb.common.Response
 import com.demo.movietmdb.data.TestData.id
 import com.demo.movietmdb.data.TestData.movieDetails
 import com.demo.movietmdb.domain.model.MovieDetails
@@ -35,42 +35,42 @@ class MovieRepositoryImplTest {
     fun `getMovies on getting result from MovieRemoteDataSource returns movie list as flow of Success ApiResponse`() =
         runTest {
             // Arrange
-            val expectedApiResponse =
-                ApiResponse.Success(MovieList(emptyList()))
+            val expectedResponse =
+                Response.Success(MovieList(emptyList()))
             coEvery { (mockMovieRemoteDataSource.getMovies()) } returns (flow {
                 emit(
-                    expectedApiResponse
+                    expectedResponse
                 )
             })
 
             // Act
-            val resultFlow: Flow<ApiResponse<MovieList>> =
+            val resultFlow: Flow<Response<MovieList>> =
                 movieRepository.getMovies()
 
             // Assert
-            val resultList: List<ApiResponse<MovieList>> = resultFlow.toList()
-            assertEquals(listOf(expectedApiResponse), resultList)
+            val resultList: List<Response<MovieList>> = resultFlow.toList()
+            assertEquals(listOf(expectedResponse), resultList)
         }
 
     @Test
     fun `getMovieDetails on success returns movie details as ApiResponse`() = runTest {
         // Arrange
         val movieId = id
-        val expectedApiResponse = ApiResponse.Success(
+        val expectedResponse = Response.Success(
             movieDetails
         )
         coEvery { (mockMovieRemoteDataSource.getMovieDetails(movieId)) } returns (flow {
             emit(
-                expectedApiResponse
+                expectedResponse
             )
         })
 
         // Act
-        val resultFlow: Flow<ApiResponse<MovieDetails>> =
+        val resultFlow: Flow<Response<MovieDetails>> =
             movieRepository.getMovieDetails(movieId)
 
         // Assert
-        val result: ApiResponse<MovieDetails> = resultFlow.last()
-        assertEquals(expectedApiResponse, result)
+        val result: Response<MovieDetails> = resultFlow.last()
+        assertEquals(expectedResponse, result)
     }
 }

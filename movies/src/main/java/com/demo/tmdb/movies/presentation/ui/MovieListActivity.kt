@@ -1,4 +1,4 @@
-package com.demo.tmdb.movies.presentation
+package com.demo.tmdb.movies.presentation.ui
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity

@@ -1,6 +1,6 @@
 package com.demo.tmdb.movies.viewmodel
 
-import com.demo.movietmdb.common.ApiResponse
+import com.demo.movietmdb.common.Response
 import com.demo.movietmdb.common.ViewState
 import com.demo.movietmdb.domain.model.MovieList
 import com.demo.movietmdb.domain.usecase.GetMoviesListUseCase
@@ -39,9 +39,9 @@ class MovieListViewModelTest {
     @Test
     fun `getMovieList on Success returns Success ViewState`() = runTest {
         val movies = listOf(movie)
-        val apiResponse = ApiResponse.Success(MovieList(movies))
-        val mappedResponse = ApiResponse.Success(movies)
-        coEvery { mockGetMoviesListUseCase() } returns flowOf(apiResponse)
+        val response = Response.Success(MovieList(movies))
+        val mappedResponse = Response.Success(movies)
+        coEvery { mockGetMoviesListUseCase() } returns flowOf(response)
         movieListViewModel.getMovieList()
         Assert.assertEquals(
             mappedResponse.data[0].id,
@@ -51,11 +51,11 @@ class MovieListViewModelTest {
 
     @Test
     fun `getMovieList on Error returns Error ViewState`() = runTest {
-        val apiResponse = ApiResponse.Error(errorMsg)
-        coEvery { mockGetMoviesListUseCase() } returns flowOf(apiResponse)
+        val response = Response.Error(errorMsg)
+        coEvery { mockGetMoviesListUseCase() } returns flowOf(response)
         movieListViewModel.getMovieList()
         Assert.assertEquals(
-            apiResponse.message,
+            response.message,
             (movieListViewModel.movieListStateFlow.value as ViewState.ErrorState).message
         )
     }

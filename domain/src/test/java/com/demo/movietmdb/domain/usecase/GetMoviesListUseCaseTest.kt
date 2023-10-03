@@ -1,6 +1,6 @@
 package com.demo.movietmdb.domain.usecase
 
-import com.demo.movietmdb.common.ApiResponse
+import com.demo.movietmdb.common.Response
 import com.demo.movietmdb.domain.model.MovieList
 import com.demo.movietmdb.domain.repository.MovieRepository
 import com.demo.movietmdb.domain.usecase.TestData.errorMsg
@@ -33,14 +33,14 @@ class GetMoviesListUseCaseTest {
     fun `getMoviesListUseCase on success returns list of movies as Success ApiResponse`() =
         runTest {
             val movies = listOf(movie)
-            val expectedResponse = ApiResponse.Success(MovieList(movies))
+            val expectedResponse = Response.Success(MovieList(movies))
             coEvery { (mockMovieRepository.getMovies()) } returns (flow { emit(expectedResponse) })
 
             val result = getMoviesListUseCase()
 
             result.collect { response ->
-                assert(response is ApiResponse.Success)
-                val data = (response as ApiResponse.Success).data
+                assert(response is Response.Success)
+                val data = (response as Response.Success).data
                 assert(data.movies.size == 1)
                 assert(data.movies[0].title == title)
             }
@@ -49,14 +49,14 @@ class GetMoviesListUseCaseTest {
     @Test
     fun `getMoviesListUseCase on error returns error message as Error ApiResponse`() = runTest {
         val errorString = errorMsg
-        val expectedResponse = ApiResponse.Error(errorString)
+        val expectedResponse = Response.Error(errorString)
         coEvery { (mockMovieRepository.getMovies()) } returns (flow { emit(expectedResponse) })
 
         val result = getMoviesListUseCase()
 
         result.collect { response ->
-            assert(response is ApiResponse.Error)
-            val errorMsg = (response as ApiResponse.Error).message
+            assert(response is Response.Error)
+            val errorMsg = (response as Response.Error).message
             Assert.assertEquals(errorMsg, errorString)
         }
     }

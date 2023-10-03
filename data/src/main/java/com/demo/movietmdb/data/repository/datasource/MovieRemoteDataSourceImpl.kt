@@ -1,6 +1,6 @@
 package com.demo.movietmdb.data.repository.datasource
 
-import com.demo.movietmdb.common.ApiResponse
+import com.demo.movietmdb.common.Response
 import com.demo.movietmdb.data.BuildConfig
 import com.demo.movietmdb.data.api.TMDBService
 import com.demo.movietmdb.data.mapper.MovieDetailsDtoToModelMapper
@@ -21,51 +21,51 @@ class MovieRemoteDataSourceImpl @Inject constructor(
     private val movieDetailsDtoToModelMapper: MovieDetailsDtoToModelMapper
 ) : MovieRemoteDataSource {
 
-    override suspend fun getMovies(): Flow<ApiResponse<MovieList>> = flow {
-        emit(ApiResponse.Loading)
+    override suspend fun getMovies(): Flow<Response<MovieList>> = flow {
+        emit(Response.Loading)
         try {
             val response = tmdbService.getMovies(BuildConfig.API_KEY)
             if (response.isSuccessful) {
                 response.body()
                     ?.let {
                         emit(
-                            ApiResponse.Success(
+                            Response.Success(
                                 movieListDtoToModelMapper.mapFrom(it)
                             )
                         )
                     }
             } else {
-                emit(ApiResponse.Error(response.message()))
+                emit(Response.Error(response.message()))
             }
 
         } catch (e: HttpException) {
-            emit(ApiResponse.Error(e.localizedMessage ?: ""))
+            emit(Response.Error(e.localizedMessage ?: ""))
 
         } catch (e: IOException) {
-            emit(ApiResponse.Error(e.localizedMessage ?: ""))
+            emit(Response.Error(e.localizedMessage ?: ""))
 
         }
     }.flowOn(Dispatchers.IO)
 
 
-    override suspend fun getMovieDetails(movieId: Int): Flow<ApiResponse<MovieDetails>> = flow {
-        emit(ApiResponse.Loading)
+    override suspend fun getMovieDetails(movieId: Int): Flow<Response<MovieDetails>> = flow {
+        emit(Response.Loading)
         try {
 
             val response = tmdbService.getMovieDetails(movieId, BuildConfig.API_KEY)
             if (response.isSuccessful) {
 
                 response.body()
-                    ?.let { emit(ApiResponse.Success(movieDetailsDtoToModelMapper.mapFrom(it))) }
+                    ?.let { emit(Response.Success(movieDetailsDtoToModelMapper.mapFrom(it))) }
             } else {
-                emit(ApiResponse.Error(response.message()))
+                emit(Response.Error(response.message()))
             }
 
         } catch (e: HttpException) {
-            emit(ApiResponse.Error(e.localizedMessage ?: ""))
+            emit(Response.Error(e.localizedMessage ?: ""))
 
         } catch (e: IOException) {
-            emit(ApiResponse.Error(e.localizedMessage ?: ""))
+            emit(Response.Error(e.localizedMessage ?: ""))
 
         }
     }.flowOn(Dispatchers.IO)

@@ -1,6 +1,6 @@
 package com.demo.movietmdb.domain.usecase
 
-import com.demo.movietmdb.common.ApiResponse
+import com.demo.movietmdb.common.Response
 import com.demo.movietmdb.domain.repository.MovieRepository
 import com.demo.movietmdb.domain.usecase.TestData.errorMsg
 import com.demo.movietmdb.domain.usecase.TestData.id
@@ -32,7 +32,7 @@ class GetMovieDetailsUseCaseTest {
         runTest {
             val movieId = id
             val title = title
-            val expectedResponse = ApiResponse.Success(movieDetails)
+            val expectedResponse = Response.Success(movieDetails)
             coEvery { (mockMovieRepository.getMovieDetails(movieId)) } returns (flow {
                 emit(
                     expectedResponse
@@ -42,8 +42,8 @@ class GetMovieDetailsUseCaseTest {
             val result = getMovieDetailsUseCase(movieId)
 
             result.collect { response ->
-                assert(response is ApiResponse.Success)
-                val data = (response as ApiResponse.Success).data
+                assert(response is Response.Success)
+                val data = (response as Response.Success).data
                 assert(data.id == movieId)
                 assert(data.title == title)
             }
@@ -54,7 +54,7 @@ class GetMovieDetailsUseCaseTest {
         runTest {
             val movieId = id
             val errorString = errorMsg
-            val expectedResponse = ApiResponse.Error(errorString)
+            val expectedResponse = Response.Error(errorString)
             coEvery { (mockMovieRepository.getMovieDetails(movieId)) } returns (flow {
                 emit(
                     expectedResponse
@@ -64,8 +64,8 @@ class GetMovieDetailsUseCaseTest {
             val result = getMovieDetailsUseCase(movieId)
 
             result.collect { response ->
-                assert(response is ApiResponse.Error)
-                val errorMsg = (response as ApiResponse.Error).message
+                assert(response is Response.Error)
+                val errorMsg = (response as Response.Error).message
                 Assert.assertEquals(errorMsg, errorString)
             }
         }

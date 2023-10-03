@@ -15,8 +15,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import com.demo.movietmdb.domain.model.Movie
-import com.demo.tmdb.movies.presentation.components.CustomImage
-import com.demo.tmdb.movies.presentation.components.CustomText
+import com.demo.tmdb.movies.presentation.ui.components.CustomImage
+import com.demo.tmdb.movies.presentation.ui.components.CustomText
 
 @Composable
 fun MovieGridItem(movie: Movie, selectedMovie: (Int, String) -> Unit) {
