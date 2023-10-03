@@ -8,9 +8,8 @@ import com.demo.tmdb.movies.Dispatcher
 import com.demo.tmdb.movies.TestData.errorMsg
 import com.demo.tmdb.movies.TestData.movie
 import com.demo.tmdb.movies.presentation.movielist.viewmodel.MovieListViewModel
-import io.mockk.MockKAnnotations
 import io.mockk.coEvery
-import io.mockk.impl.annotations.RelaxedMockK
+import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
@@ -21,8 +20,7 @@ import org.junit.Test
 
 class MovieListViewModelTest {
 
-    @RelaxedMockK
-    private lateinit var mockGetMoviesListUseCase: GetMoviesListUseCase
+    private val mockGetMoviesListUseCase: GetMoviesListUseCase = mockk(relaxed = true)
 
     private lateinit var movieListViewModel: MovieListViewModel
 
@@ -32,7 +30,6 @@ class MovieListViewModelTest {
 
     @Before
     fun setup() {
-        MockKAnnotations.init(this, true)
         movieListViewModel = MovieListViewModel(mockGetMoviesListUseCase)
     }
 
@@ -42,7 +39,9 @@ class MovieListViewModelTest {
         val response = Response.Success(MovieList(movies))
         val mappedResponse = Response.Success(movies)
         coEvery { mockGetMoviesListUseCase() } returns flowOf(response)
+
         movieListViewModel.getMovieList()
+
         Assert.assertEquals(
             mappedResponse.data[0].id,
             (movieListViewModel.movieListStateFlow.value as ViewState.SuccessState).data[0].id
@@ -53,7 +52,9 @@ class MovieListViewModelTest {
     fun `getMovieList on Error returns Error ViewState`() = runTest {
         val response = Response.Error(errorMsg)
         coEvery { mockGetMoviesListUseCase() } returns flowOf(response)
+
         movieListViewModel.getMovieList()
+
         Assert.assertEquals(
             response.message,
             (movieListViewModel.movieListStateFlow.value as ViewState.ErrorState).message

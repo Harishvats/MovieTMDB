@@ -7,7 +7,7 @@ plugins {
 
 android {
     namespace = "com.demo.movietmdb"
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "com.demo.movietmdb"
@@ -55,16 +55,16 @@ dependencies {
     implementation(project(mapOf("path" to ":movies")))
 
     //    Hilt
-    implementation("com.google.dagger:hilt-android:2.44.2")
-    kapt("com.google.dagger:hilt-android-compiler:2.44.2")
+    implementation(libs.hilt.android)
+    kapt(libs.hilt.android.compiler)
 
 
-    implementation("androidx.activity:activity-compose:1.7.2")
+    implementation(libs.activity.compose)
     implementation(platform("androidx.compose:compose-bom:2023.03.00"))
     implementation("androidx.compose.material3:material3")
-    implementation("androidx.navigation:navigation-compose:2.6.0")
+    implementation(libs.navigation.compose)
 
-    testImplementation("junit:junit:4.13.2")
+    testImplementation(libs.junit)
 
 }
 // Allow references to generated code

@@ -17,6 +17,7 @@ class MovieDetailsDtoToModelMapperTest {
     @Test
     fun `MovieDetailsDTOToModelMapper maps input MovieDetailsDTO to MovieDetails domain model`() {
         val mappedMovieDetails = mapper.mapFrom(TestData.movieDetailsDTO)
+
         Assert.assertEquals(mappedMovieDetails.runtime, TestData.movieDetails.runtime)
     }
 

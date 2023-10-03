@@ -6,9 +6,8 @@ import com.demo.movietmdb.domain.repository.MovieRepository
 import com.demo.movietmdb.domain.usecase.TestData.errorMsg
 import com.demo.movietmdb.domain.usecase.TestData.movie
 import com.demo.movietmdb.domain.usecase.TestData.title
-import io.mockk.MockKAnnotations
 import io.mockk.coEvery
-import io.mockk.impl.annotations.MockK
+import io.mockk.mockk
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert
@@ -18,14 +17,12 @@ import org.junit.Test
 
 class GetMoviesListUseCaseTest {
 
-    @MockK
-    private lateinit var mockMovieRepository: MovieRepository
+    private val mockMovieRepository = mockk<MovieRepository>()
 
     private lateinit var getMoviesListUseCase: GetMoviesListUseCase
 
     @Before
     fun setup() {
-        MockKAnnotations.init(this, true)
         getMoviesListUseCase = GetMoviesListUseCase(mockMovieRepository)
     }
 

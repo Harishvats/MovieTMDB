@@ -18,6 +18,7 @@ class MovieDtoToModelMapperTest {
     @Test
     fun `MovieDtoToModelMapper maps MovieListDTO to MovieList model`() {
         val mappedMovie = mapper.mapFrom(movieDTO)
+
         Assert.assertEquals(mappedMovie.title, movie.title)
     }
 

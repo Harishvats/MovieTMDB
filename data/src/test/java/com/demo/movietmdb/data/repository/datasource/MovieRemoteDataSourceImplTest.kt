@@ -16,9 +16,8 @@ import com.demo.movietmdb.data.mapper.MovieListDtoToModelMapper
 import com.demo.movietmdb.data.model.MovieDetailsDTO
 import com.demo.movietmdb.data.model.MovieListDTO
 import com.demo.movietmdb.domain.model.MovieList
-import io.mockk.MockKAnnotations
 import io.mockk.coEvery
-import io.mockk.impl.annotations.MockK
+import io.mockk.mockk
 import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.test.runTest
 import okhttp3.ResponseBody.Companion.toResponseBody
@@ -29,26 +28,20 @@ import retrofit2.HttpException
 import java.io.IOException
 
 class MovieRemoteDataSourceImplTest {
-    @MockK
-    private lateinit var mockTmdbService: TMDBService
 
-    @MockK
-    private lateinit var mockMovieListDtoToModelMapper: MovieListDtoToModelMapper
+    private val mockTmdbService: TMDBService = mockk()
 
-    @MockK
-    private lateinit var mockMovieDetailsDtoToModelMapper: MovieDetailsDtoToModelMapper
+    private val mockMovieListDtoToModelMapper: MovieListDtoToModelMapper = mockk()
+
+    private val mockMovieDetailsDtoToModelMapper: MovieDetailsDtoToModelMapper = mockk()
 
     private lateinit var movieRemoteDataSource: MovieRemoteDataSourceImpl
 
     @Before
     fun setup() {
-        MockKAnnotations.init(this, true)
-        movieRemoteDataSource =
-            MovieRemoteDataSourceImpl(
-                mockTmdbService,
-                mockMovieListDtoToModelMapper,
-                mockMovieDetailsDtoToModelMapper
-            )
+        movieRemoteDataSource = MovieRemoteDataSourceImpl(
+            mockTmdbService, mockMovieListDtoToModelMapper, mockMovieDetailsDtoToModelMapper
+        )
     }
 
     @Test
@@ -59,11 +52,9 @@ class MovieRemoteDataSourceImplTest {
         val movieListDto = MovieListDTO(movieDTO = moviesDTO)
         val expectedMovieList = MovieList(movies)
 
-        coEvery { (mockTmdbService.getMovies(BuildConfig.API_KEY)) } returns (
-                retrofit2.Response.success(
-                    movieListDto
-                )
-                )
+        coEvery { (mockTmdbService.getMovies(BuildConfig.API_KEY)) } returns (retrofit2.Response.success(
+            movieListDto
+        ))
         coEvery { (mockMovieListDtoToModelMapper.mapFrom(movieListDto)) } returns (expectedMovieList)
 
         // Act
@@ -77,8 +68,7 @@ class MovieRemoteDataSourceImplTest {
     fun `getMovies() on error returns flow of Error ApiResponse`() = runTest {
         // Arrange
         val response = retrofit2.Response.error<MovieListDTO>(
-            errorCode,
-            "".toResponseBody(responseBody)
+            errorCode, "".toResponseBody(responseBody)
         )
         coEvery { (mockTmdbService.getMovies(BuildConfig.API_KEY)) } returns (response)
 
@@ -86,8 +76,7 @@ class MovieRemoteDataSourceImplTest {
         val result = movieRemoteDataSource.getMovies().last()
 
         assertEquals(
-            responseErrorMessage,
-            (result as com.demo.movietmdb.common.Response.Error).message
+            responseErrorMessage, (result as com.demo.movietmdb.common.Response.Error).message
         )
     }
 
@@ -95,23 +84,18 @@ class MovieRemoteDataSourceImplTest {
     fun `getMovies() on HttpException in api call returns flow of Error ApiResponse with exception message`() =
         runTest {
             val response = retrofit2.Response.error<MovieListDTO>(
-                errorCode,
-                "".toResponseBody(responseBody)
+                errorCode, "".toResponseBody(responseBody)
             )
             coEvery {
                 (mockTmdbService.getMovies(BuildConfig.API_KEY))
-            } answers {
-                throw HttpException(
-                    response
-                )
-            }
+            } throws HttpException(response)
+
 
             // Act
             val result = movieRemoteDataSource.getMovies().last()
 
             assertEquals(
-                com.demo.movietmdb.common.Response.Error(httpResponseErrorMessage),
-                result
+                com.demo.movietmdb.common.Response.Error(httpResponseErrorMessage), result
             )
         }
 
@@ -121,7 +105,7 @@ class MovieRemoteDataSourceImplTest {
 
             coEvery {
                 (mockTmdbService.getMovies(BuildConfig.API_KEY))
-            } answers { throw IOException(IOResponseErrorMessage) }
+            } throws IOException(IOResponseErrorMessage)
 
             // Act
             val result = movieRemoteDataSource.getMovies().last()
@@ -136,12 +120,12 @@ class MovieRemoteDataSourceImplTest {
             val movieId = id
             val movieDetailsDto = movieDetailsDTO
             val expectedMovieDetails = movieDetails
-            coEvery { (mockTmdbService.getMovieDetails(movieId, BuildConfig.API_KEY)) } returns (
-                    retrofit2.Response.success(movieDetailsDto)
-                    )
-            coEvery { (mockMovieDetailsDtoToModelMapper.mapFrom(movieDetailsDto)) } returns (
-                    expectedMovieDetails
-                    )
+            coEvery {
+                (mockTmdbService.getMovieDetails(
+                    movieId, BuildConfig.API_KEY
+                ))
+            } returns (retrofit2.Response.success(movieDetailsDto))
+            coEvery { (mockMovieDetailsDtoToModelMapper.mapFrom(movieDetailsDto)) } returns (expectedMovieDetails)
 
             // Act
             val result = movieRemoteDataSource.getMovieDetails(movieId).last()
@@ -154,13 +138,11 @@ class MovieRemoteDataSourceImplTest {
     fun `getMovieDetails on Error in api call returns flow of Error ApiResponse`() = runTest {
         val movieId = id
         val response = retrofit2.Response.error<MovieDetailsDTO>(
-            errorCode,
-            "".toResponseBody(responseBody)
+            errorCode, "".toResponseBody(responseBody)
         )
         coEvery {
             (mockTmdbService.getMovieDetails(
-                movieId,
-                BuildConfig.API_KEY
+                movieId, BuildConfig.API_KEY
             ))
         } returns (response)
 
@@ -168,8 +150,7 @@ class MovieRemoteDataSourceImplTest {
         val result = movieRemoteDataSource.getMovieDetails(movieId).last()
 
         assertEquals(
-            responseErrorMessage,
-            (result as com.demo.movietmdb.common.Response.Error).message
+            responseErrorMessage, (result as com.demo.movietmdb.common.Response.Error).message
         )
 
     }
@@ -179,21 +160,20 @@ class MovieRemoteDataSourceImplTest {
         runTest {
             val movieId = id
             val response = retrofit2.Response.error<MovieListDTO>(
-                errorCode,
-                "".toResponseBody(responseBody)
+                errorCode, "".toResponseBody(responseBody)
             )
-            coEvery { (mockTmdbService.getMovieDetails(movieId, BuildConfig.API_KEY)) } answers {
-                throw HttpException(
-                    response
-                )
-            }
+            coEvery {
+                (mockTmdbService.getMovieDetails(
+                    movieId, BuildConfig.API_KEY
+                ))
+            } throws HttpException(response)
+
 
             // Act
             val result = movieRemoteDataSource.getMovieDetails(movieId).last()
 
             assertEquals(
-                com.demo.movietmdb.common.Response.Error(httpResponseErrorMessage),
-                result
+                com.demo.movietmdb.common.Response.Error(httpResponseErrorMessage), result
             )
         }
 
@@ -201,9 +181,12 @@ class MovieRemoteDataSourceImplTest {
     fun `getMovieDetails on IOException in api call returns flow of Error ApiResponse with exception message`() =
         runTest {
             val movieId = id
-            coEvery { (mockTmdbService.getMovieDetails(movieId, BuildConfig.API_KEY)) } answers {
-                throw IOException(IOResponseErrorMessage)
-            }
+            coEvery {
+                (mockTmdbService.getMovieDetails(
+                    movieId, BuildConfig.API_KEY
+                ))
+            } throws IOException(IOResponseErrorMessage)
+
 
             // Act
             val result = movieRemoteDataSource.getMovieDetails(movieId).last()
