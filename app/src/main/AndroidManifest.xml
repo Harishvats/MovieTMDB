@@ -16,7 +16,7 @@
         android:theme="@style/Theme.MovieTMDB"
         tools:targetApi="31">
         <activity
-            android:name=".MovieListActivity"
+            android:name="com.demo.tmdb.movies.presentation.MovieListActivity"
             android:exported="true"
             android:theme="@style/Theme.MovieTMDB">
             <intent-filter>

@@ -1,4 +1,4 @@
-package com.demo.movietmdb.presentation.ui.theme
+package com.demo.tmdb.movies.presentation.ui.theme
 
 import android.app.Activity
 import android.os.Build
@@ -14,6 +14,13 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
+import com.demo.movietmdb.presentation.ui.theme.Pink40
+import com.demo.movietmdb.presentation.ui.theme.Pink80
+import com.demo.movietmdb.presentation.ui.theme.Purple40
+import com.demo.movietmdb.presentation.ui.theme.Purple80
+import com.demo.movietmdb.presentation.ui.theme.PurpleGrey40
+import com.demo.movietmdb.presentation.ui.theme.PurpleGrey80
+import com.demo.movietmdb.presentation.ui.theme.Typography
 
 private val DarkColorScheme = darkColorScheme(
     primary = Purple80,

@@ -1,4 +1,4 @@
-package com.demo.movietmdb
+package com.demo.tmdb.movies.presentation
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -23,7 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.demo.movietmdb.presentation.ui.theme.MovieTMDBTheme
+import com.demo.tmdb.movies.presentation.ui.theme.MovieTMDBTheme
 import com.demo.tmdb.movies.presentation.moviedetails.viewmodel.MovieDetailsViewModel
 import com.demo.tmdb.movies.presentation.movielist.viewmodel.MovieListViewModel
 import com.demo.tmdb.movies.presentation.navigation.AppNavHost
