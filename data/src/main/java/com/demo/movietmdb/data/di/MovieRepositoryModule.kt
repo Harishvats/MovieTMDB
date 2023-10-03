@@ -1,4 +1,4 @@
-package com.demo.tmdb.movies.presentation.di
+package com.demo.movietmdb.data.di
 
 import com.demo.movietmdb.data.repository.MovieRepositoryImpl
 import com.demo.movietmdb.domain.repository.MovieRepository

@@ -53,9 +53,11 @@ android {
 
 dependencies {
     implementation(project(mapOf("path" to ":movies")))
-
+    implementation(project(mapOf("path" to ":data")))
+    
     //    Hilt
     implementation(libs.hilt.android)
+
     kapt(libs.hilt.android.compiler)
 
 
